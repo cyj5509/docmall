@@ -13,7 +13,7 @@ public class EmailDTO {
 
 	private String senderName; // 발신자 이름
 	private String senderMail; // 발신자 메일주소
-	private String receiverMail; // 수신자 메일주소 즉, 회원메일 주소
+	private String receiverMail; // 수신자 메일주소 즉, 회원메일 주소로 클라이언트 측에서 제공(join.jsp)
 	private String subject; // 제목
 	private String message; // 본문 내용
 

@@ -78,7 +78,7 @@
 												placeholder="전자우편 입력...">
 										</div>
 										<div class="col-2">
-											<button type="button" class="btn btn-outline-info" id="mailAuth">메일 인증</button>
+											<button type="button" class="btn btn-outline-info" id="">메일 인증</button>
 										</div>
 									</div>
 									<div class="form-group row">
@@ -257,10 +257,9 @@
 								// url : '아이디를 체크하는 매핑주소'
 								url: '/member/idCheck', // url : '아이디를 체크하는 매핑주소'
 								type: 'get', // get or post
-								dataType: 'text', // ResponseEntity<String>
-								data: { mbsp_id: $("#mbsp_id").val() }, // data: {파라미터명: 데이터값}
-								// success: function(매개변수명) { 
-								success: function (result) {
+								dataType: 'text', // <String>
+								data: { mbsp_id: $("#mbsp_id").val() }, // data: {파라미터명: 데이터 값}
+								success: function (result) { // success: function (매개변수명) { 
 									if (result == "yes") {
 										alert("아이디 사용 가능");
 										useIDCheck = true;
@@ -273,6 +272,27 @@
 									}
 								}
 							});
+						});
+						// 메일 인증 요청
+						$("#mailAuth").click(function () {
+							if ($("#mbsp_email").val() == "") {
+								alert("이메일을 입력하세요");
+								$("#mbsp_email").focus();
+								return;
+							}
+
+							$.ajax({
+								url: '/email/authcode',
+								type: 'get',
+								dataType: 'text', // 스프링에서 보내는 데이터의 타입: <String> -> "success" -> text
+								data: { receiverMail: $("#mbsp_email").val() }, // @Setter ─ EmailDTO의 private String receiverMail;
+								success: function(result) {
+									if(result == "success") {
+										alert("인증 메일이 발송되었습니다. 메일 확인 바랍니다.")
+									}
+								}
+							});
+
 						});
 					});
 				</script>

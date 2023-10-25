@@ -6,7 +6,7 @@
 <mapper namespace="com.docmall.mapper.MemberMapper">
 
 <select id="idCheck" parameterType="String" resultType="String">
-
+ 
 	SELECT MBSP_ID FROM mbsp_tbl WHERE MBSP_ID = #{mbsp_id}
 
 </select>
