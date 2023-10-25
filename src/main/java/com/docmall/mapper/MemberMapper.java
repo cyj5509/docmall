@@ -10,6 +10,7 @@ public interface MemberMapper {
 	    (public abstract) 메서드명(매개변수 목록);
 	}
 	*/
+	
 	String idCheck(String mbsp_id);
 	
 }

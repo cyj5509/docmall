@@ -32,8 +32,8 @@ public class MemberController {
 	}
 
 	// Ajax 문법(비동기 방식)으로 호출
-	// 아이디 중복 체크
-	// ResponseEntity 클래스? httpEntity를 상속받는, 결과 데이터와 HTTP상태코드를 직접 제어 할 수 있는 클래스이다.
+	// 아이디 중복 체크 기능 구현
+	// ResponseEntity 클래스? httpEntity를 상속받는, 결과 데이터와 HTTP 상태코드를 직접 제어 할 수 있는 클래스이다.
 	// 3가지 구성요소 ─ HttpStatus, HttpHeaders, HttpBody
 	// Ajax 기능과 함께 사용
 	@GetMapping("/idCheck")
