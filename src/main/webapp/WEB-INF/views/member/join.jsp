@@ -40,7 +40,7 @@
 					<div class="box box-primary">
 						<div class="box-header with-border">
 							<br>
-							<h3>회원가입</h3>
+							<h3 class="box-title">회원가입</h3>
 							<br>
 							<form role="form" id="joinForm" method="post" action="/member/join">
 								<div class="box-body">

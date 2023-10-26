@@ -81,7 +81,7 @@ public class MemberController {
 		return "redirect:/member/login";
 	}
 	
-	// 로그인 폼 페이지
+	// 3. 로그인 폼 페이지
 	@GetMapping("/login")
 	public void login() {
 		
@@ -92,7 +92,7 @@ public class MemberController {
 	// <input type="text" name="mbsp_id"> <input type="text" name="mbsp_password">
 	// LoginDTO 클래스가 아닌 String mbsp_id, String mbsp_password를 파라미터로 사용해도 됨 
 	@PostMapping("/login")
-	public String login(LoginDTO dto) {
+	public String login(LoginDTO dto, HttpSession session, RedirectAttributes rttr) {
 		
 		log.info("로그인 " + dto);
 	
@@ -106,18 +106,29 @@ public class MemberController {
 			// 사용자가 입력한 비밀번호(평문 텍스트)와 DB에서 가져온 암호화된 비밀번호 일치 여부 검사
 			// passwordEncoder.matches(rawPassword, encodedPassword)
 			if(passwordEncoder.matches(dto.getMbsp_password(), db_vo.getMbsp_password())) { 
+				// 로그인 성공 결과로 서버 측의 메모리를 사용하는 세션 형태 작업
+				session.setAttribute("loginStatus", db_vo);
 				url = "/"; // 메인 페이지 주소
 			} else {
 				url = "/member/login"; // 로그인 폼 주소
+				msg = "비밀번호가 일치하지 않습니다.";
+				rttr.addFlashAttribute("msg", msg); // 로그인 폼인 login.jsp 파일에서 사용 목적
 			}
 		} else {
 			// 아이디가 일치하지 않는 경우
 			url = "/member/login"; // 로그인 폼 주소
+			msg = "아이디가 일치하지 않습니다.";
+			rttr.addFlashAttribute("msg", msg); // // 로그인 폼인 login.jsp 파일에서 사용 목적
 		}
 			
 		return "redirect:" + url;
 	}
-	
-	// 3. 로그인 폼 페이지 
+		
+	// 로그아웃
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
+	}
 
 }

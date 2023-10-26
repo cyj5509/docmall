@@ -29,6 +29,13 @@
 					}
 				}
 			</style>
+
+			<script>
+				let msg = '${msg}'; // ${msg}: MemberController의 rttr.addFlashAttribute("msg", msg);에서 앞의 "msg"
+				if(msg != "") {
+					alert(msg);
+				}
+			</script>
 	</head>
 
 	<body>
@@ -40,9 +47,9 @@
 					<div class="box box-primary">
 						<div class="box-header with-border">
 							<br>
-							<h3>로그인</h3>
+							<h3 class="box-title">로그인</h3>
 							<br>
-							<form role="form" id="joinForm" method="post" action="/member/login">
+							<form role="form" id="btnJoin" method="post" action="/member/login">
 								<div class="box-body">
 									<div class="form-group row">
 										<label for="mbsp_id" class="col-2">아이디</label>
@@ -53,13 +60,13 @@
 									<div class="form-group row">
 										<label for="mbsp_password" class="col-2">비밀번호</label>
 										<div class="col-10">
-											<input type="text" class="form-control" name="mbsp_password" id="mbsp_password" placeholder="아이디 입력...">
+											<input type="password" class="form-control" name="mbsp_password" id="mbsp_password" placeholder="비밀번호 입력...">
 										</div>
 									</div>
 								</div>
 
 								<div class="box-footer">
-									<button type="button" class="btn btn-primary" id="btnJoin">로그인</button>
+									<button type="submit" class="btn btn-primary" id="btnJoin">로그인</button>
 								</div>
 							</form>
 						</div>
@@ -166,124 +173,7 @@
 
 			<%@include file="/WEB-INF/views/comm/plugIn.jsp" %>
 
-				<script>
-					// jquery.slim.min.js 파일에 jQuery 명령어가 정의되어 있음
-					// $(): JQuery() 함수 사용 별칭
-					// ready(): 브라우저가 html 태그를 모두 읽고난 후에 동작하는 이벤트 메서드
-					// JS 이벤트 등록: https://www.w3schools.com/js/js_htmldom_eventlistener.asp 
-					$(document).ready(function () {
-
-						let useIDCheck = false; // 아이디 중복 체크 사용 유무 확인
-
-						// JS 문법: document.getElementById("idCheck");
-						$("#idCheck").click(function () {
-							//	alert("아이디 중복 체크");
-							if ($("#mbsp_id").val() == "") {
-								alert("아이디를 입력하세요.");
-								$("#mbsp_id").focus();
-								return;
-							}
-
-							// 아이디 중복 체크 기능 구현
-							$.ajax({
-								url: '/member/idCheck', // url : '아이디'를 체크하는 매핑주소
-								type: 'get', // get or post
-								dataType: 'text', // <String>
-								data: { mbsp_id: $("#mbsp_id").val() }, // data: {파라미터명: 데이터 값}
-								success: function (result) { // success: function (매개변수명) { 
-									if (result == "yes") {
-										alert("아이디 사용 가능");
-										useIDCheck = true;
-									} else {
-										alert("아이디 사용 불가능");
-										useIDCheck = false;
-										// $("#mbsp_id").val()는 GETTER, $("#mbsp_id").val("")는 SETTER
-										$("#mbsp_id").val(""); // 아이디 텍스트 박스의 값을 지움
-										$("#mbsp_id").focus(); // 포커스 기능
-									}
-								}
-							});
-						});
-						// 메일 인증 요청
-						$("#mailAuth").click(function () {
-							if ($("#mbsp_email").val() == "") {
-								alert("이메일을 입력하세요");
-								$("#mbsp_email").focus();
-								return;
-							}
-
-							$.ajax({
-								url: '/email/authCode', // @GetMapping("/authCode")
-								type: 'get',
-								dataType: 'text', // 스프링에서 보내는 데이터의 타입 ─ <String> -> "success" -> text
-								data: { receiverMail: $("#mbsp_email").val() }, // EmailDTO ─ private String receiverMail;
-								success: function (result) {
-									if (result == "success") {
-										alert("인증 메일이 발송되었습니다. 메일 확인 바랍니다.")
-									}
-								}
-							});
-						});
-
-						let isConfirmAuth = false; // 메일 인증을 하지 않은 상태
-
-						// 인증 확인: <button type="button" class="btn btn-outline-info" id="btnConfirmAuth">인증 확인</button>
-						$("#btnConfirmAuth").click(function () {
-
-							if ($("#authCode").val() == "") {
-								alert("인증코드를 입력하세요.");
-								$("#authCode").focus();
-								return;
-							}
-
-							// 인증확인 요청
-							$.ajax({
-								url: '/email/confirmAuthcode',
-								type: 'get',
-								dataType: 'text', // / 스프링에서 보내는 데이터의 타입 ─ <String>
-								data: { authCode: $("#authCode").val() },
-								success: function (result) {
-									if (result == "success") {
-										alert("인증에 성공하였습니다.");
-										isConfirmAuth = true;
-									} else if (result == "fail") {
-										alert("인증에 실패하였습니다. 다시 확인바랍니다..");
-										$("#authCode").val("");
-										isConfirmAuth = false;
-									} else if (result == "request") { // 세션 종료 시(기본 30분)
-										alert("메일 인증 요청을 다시 해주세요.");
-										$("#authCode").val("");
-										isConfirmAuth = false;
-									}
-								}
-							});
-							
-						});
-
-						// form 태그 참조: <form role="form" id="joinForm" method="post" action="/member/join">
-						let joinForm = $("#joinForm");
-
-						// 회원가입 버튼
-						$("#btnJoin").click(function () {
-
-							// 회원가입 유효성 검사(JS 이용)
-
-							if (!useIDCheck) {
-								alert("아이디 중복 체크바랍니다.");
-								return;
-							}
-							if (!isConfirmAuth) {
-								alert("메일 인증 확인바랍니다.");
-								return;
-							}
-
-							// 폼 전송 작업(스프링 작업 이후)
-							joinForm.submit();
-						})
-
-					});
-				</script>
-
+				
 	</body>
 
 	</html>
