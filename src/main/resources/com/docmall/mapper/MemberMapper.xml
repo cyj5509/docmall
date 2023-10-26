@@ -6,9 +6,35 @@
 <mapper namespace="com.docmall.mapper.MemberMapper">
 
 <select id="idCheck" parameterType="String" resultType="String">
- 
 	SELECT MBSP_ID FROM mbsp_tbl WHERE MBSP_ID = #{mbsp_id}
+</select>
 
+<insert id="join" parameterType="com.docmall.domain.MemberVO">
+	INSERT INTO MBSP_TBL(MBSP_ID, MBSP_NAME, MBSP_EMAIL, MBSP_PASSWORD, MBSP_ZIPCODE, MBSP_ADDR, MBSP_DEADDR, MBSP_PHONE)
+	<!-- 아래 #{}은 GETTER 메서드로 동작 -->
+	VALUES(#{mbsp_id}, #{mbsp_name}, #{mbsp_email}, #{mbsp_password}, #{mbsp_zipcode}, #{mbsp_addr}, #{mbsp_deaddr}, #{mbsp_phone})
+</insert>
+
+<select id="login" parameterType="String" resultType="com.docmall.domain.MemberVO">
+	<!-- 실제 프로젝트에서는 SELECT 구문에 전체를 의미하는 '*'를 거의 쓰지 않음 -->
+	<!-- 아래와 같이 가독성을 위해 작성하기도 함 -->
+	SELECT 
+		MBSP_ID, 
+		MBSP_NAME, 
+		MBSP_EMAIL, 
+		MBSP_PASSWORD, 
+		MBSP_ZIPCODE, 
+		MBSP_ADDR, 
+		MBSP_DEADDR, 
+		MBSP_PHONE, 
+		MBSP_POINT, 
+		MBSP_LASTLOGIN, 
+		MBSP_DATESUB, 
+		MBSP_UPDATEDATE 
+	FROM 
+		MBSP_TBL 
+	WHERE 
+		MBSP_ID = #{mbsp_id}
 </select>
 
 </mapper>  

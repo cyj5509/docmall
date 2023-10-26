@@ -68,7 +68,7 @@ public class EmailController {
 				entity = new ResponseEntity<String>("fail", HttpStatus.OK);
 			}
 		} else {
-			// 세션이 소멸되었을 때
+			// 세션이 소멸되었을 때(기본 30분)
 			entity = new ResponseEntity<String>("request", HttpStatus.OK);
 		}
 		return entity;

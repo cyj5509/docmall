@@ -9,8 +9,10 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/spring/root-context.xml <!-- 기본 구성 -->
-			/WEB-INF/spring/email/email-config.xml <!-- 추가 구성 -->
+			/WEB-INF/spring/root-context.xml
+			<!-- root-context.xml에 작성하는 것이 아닌 새로운 파일 생성 시 아래와 같은 추가 작업 필요-->
+			/WEB-INF/spring/email/email-config.xml <!-- email-config.xml 및 email.properties -->
+			/WEB-INF/spring/security/spring-security.xml <!-- spring-security.xml-->
 		</param-value>
 	</context-param>
 
