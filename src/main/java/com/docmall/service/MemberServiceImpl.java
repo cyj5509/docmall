@@ -40,4 +40,22 @@ public class MemberServiceImpl implements MemberService {
 		return memberMapper.login(mbsp_id);
 	}
 
+	@Override
+	public void modify(MemberVO vo) {
+		
+		memberMapper.modify(vo);
+	}
+
+	@Override
+	public void loginTimeUpdate(String mbsp_id) {
+
+		memberMapper.loginTimeUpdate(mbsp_id);
+	}
+
+	@Override
+	public void delete(String mbsp_id) {
+		
+		memberMapper.delete(mbsp_id);
+	}
+
 }

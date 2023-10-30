@@ -19,4 +19,10 @@ public interface MemberMapper {
 	
 	// 로그인을 위해 회원정보 전체가 아닌 아이디만 가져옴
 	MemberVO login(String mbsp_id);
+	
+	void modify(MemberVO vo);
+	
+	void loginTimeUpdate(String mbsp_id);
+	
+	void delete(String mbsp_id);
 }
