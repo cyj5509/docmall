@@ -57,7 +57,7 @@ public class EmailController {
 
 		ResponseEntity<String> entity = null;
 
-		String sAuthCod = ""; // sAuthCod: s는 서버 또는 세션
+		String sAuthCode = ""; // sAuthCod: s는 서버 또는 세션
 
 		// 세션 작업: 이를 위해 해당 메소드의 매개변수에 HttpSession session을 명시함
 		if (session.getAttribute("authCode") != null) {
