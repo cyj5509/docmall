@@ -6,4 +6,13 @@
   
 <mapper namespace="com.docmall.mapper.AdminMapper">
 
+	<select id="admin_ok" resultType="com.docmall.domain.AdminVO" parameterType="String">
+		SELECT
+			ADMIN_ID, ADMIN_PW, ADMIN_VISIT_DATE
+		FROM
+			ADMIN_TBL
+		WHERE
+			ADMIN_ID = #{admin_id}
+	</select>
+
 </mapper>

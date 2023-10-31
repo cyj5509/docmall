@@ -2,6 +2,7 @@ package com.docmall.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.docmall.domain.AdminVO;
+import com.docmall.domain.MemberVO;
 import com.docmall.service.AdminService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,9 +24,10 @@ import lombok.extern.log4j.Log4j;
 public class AdminController {
 
 	private final AdminService adminService;
+	private final PasswordEncoder passwordEncoder; 
 	
 	// 관리자 로그인 폼 페이지
-	@GetMapping("")
+	@GetMapping("/intro")
 	public String adminLogin() {
 		log.info("관리자 로그인 페이지");
 		
@@ -35,7 +38,45 @@ public class AdminController {
 	@PostMapping("/admin_ok")
 	public String admin_ok(AdminVO vo, HttpSession session, RedirectAttributes rttr) throws Exception {
 		
-		return "redirect:/admin_menu";
+		log.info("관리자 로그인: " + vo);
+
+		AdminVO db_vo = adminService.admin_ok(vo.getAdmin_id());
+
+		String url = "";
+		String msg = "";
+
+		if (db_vo != null) {
+			// 아이디가 일치하는 경우 실행
+			// 사용자가 입력한 비밀번호(평문 텍스트)와 DB에서 가져온 암호화된 비밀번호 일치 여부 검사
+			// passwordEncoder.matches(rawPassword, encodedPassword)
+			if (passwordEncoder.matches(vo.getAdmin_pw(), db_vo.getAdmin_pw())) {
+				// 로그인 성공 결과로 서버 측의 메모리를 사용하는 세션 형태 작업
+				session.setAttribute("adminStatus", db_vo); // logiStatus와 이름이 중복돼선 안 된다
+				
+				// 최근 접속(로그인) 시간 업데이트(개별적으로 진행할 것)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				
+				url = "/admin/admin_menu"; // 관리자 메뉴 페이지 주소
+			} else {
+				url = "/admin/intro"; // 로그인 폼 주소
+				msg = "아이디가 일치하지 않습니다."; // "failID"
+				rttr.addFlashAttribute("msg", msg); // 로그인 폼인 login.jsp 파일에서 사용 목적
+			}
+		} else {
+			// 아이디가 일치하지 않는 경우
+			url = "/admin/intro"; // 로그인 폼 주소
+			msg = "비밀번호가 일치하지 않습니다."; // "failPW"
+			rttr.addFlashAttribute("msg", msg); // 로그인 폼인 login.jsp 파일에서 사용 목적
+		}
+
+		return "redirect:" + url;
+	}
+	
+	// 로그아웃
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		
+		session.invalidate();
+		return "redirect:/admin/intro"; // 로그인 페이지 주소로 이동
 	}
 	
 	// 관리자 메뉴 페이지
