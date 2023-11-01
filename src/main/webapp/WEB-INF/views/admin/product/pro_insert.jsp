@@ -72,7 +72,7 @@ desired effect
                     <!-- form 태그는 글쓰기나 수정 폼에서 사용 -->
                     <form role="form" method="post" action="상품 등록 매핑 URI"> <!-- 절대 경로: /board/register와 동일 -->
                       <div class="box-body">
-                        
+
                         <div class="form-group row">
                           <label for="title" class="col-sm-2 col-form-label">카테고리</label>
                           <div class="col-sm-3">
@@ -81,7 +81,7 @@ desired effect
                             </select>
                           </div>
                           <div class="col-sm-3">
-                            <select class="form-control" id="exampleFormControlSelect1">
+                            <select class="form-control" id="cg_code" name="cg_code">
                               <option>2차 카테고리 선택</option>
                             </select>
                           </div>
@@ -90,51 +90,51 @@ desired effect
                         <div class="form-group row">
                           <label for="title" class="col-sm-2 col-form-label">상품명</label>
                           <div class="col-sm-4">
-                            <input type="text" class="form-control" name="writer" id="writer" placeholder="작성자 입력...">
+                            <input type="text" class="form-control" name="pro_name" id="pro_name" placeholder="상품명 입력...">
                           </div>
                           <label for="title" class="col-sm-2 col-form-label">상품가격</label>
                           <div class="col-sm-4">
-                            <input type="text" class="form-control" name="writer" id="writer" placeholder="작성자 입력...">
+                            <input type="text" class="form-control" name="pro_price" id="pro_price" placeholder="상품가격 입력...">
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <label for="title" class="col-sm-2 col-form-label">할인율</label>
                           <div class="col-sm-4">
-                            <input type="text" class="form-control" name="writer" id="writer" placeholder="작성자 입력...">
+                            <input type="text" class="form-control" name="pro_discount" id="pro_discount" placeholder="할인율 입력...">
                           </div>
                           <label for="title" class="col-sm-2 col-form-label">제조사</label>
                           <div class="col-sm-4">
-                            <input type="text" class="form-control" name="writer" id="writer" placeholder="작성자 입력...">
+                            <input type="text" class="form-control" name="pro_publisher" id="pro_publisher" placeholder="제조사 입력...">
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <label for="title" class="col-sm-2 col-form-label">상품이미지</label>
                           <div class="col-sm-4">
-                            <input type="file" class="form-control" name="writer" id="writer" placeholder="작성자 입력...">
+                            <input type="file" class="form-control" name="" id="" placeholder="작성자 입력...">
                           </div>
                           <label for="title" class="col-sm-2 col-form-label">미리보기 이미지</label>
                           <div class="col-sm-4">
-                            <img id="" style="width: 200px; height: 200px;" src="" alt="">
+                            <img id="" style="width: 200px; height: 200px;">
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <label for="title" class="col-sm-2 col-form-label">상품 설명</label>
                           <div class="col-sm-10">
-                            <textarea class="form-control" rows="3"></textarea>
+                            <textarea class="form-control" rows="3" name="pro_content"></textarea>
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <label for="title" class="col-sm-2 col-form-label">수량</label>
                           <div class="col-sm-4">
-                            <input type="file" class="form-control" name="writer" id="writer" placeholder="작성자 입력...">
+                            <input type="file" class="form-control" name="pro_amount" id="pro_amount" placeholder="수량 입력...">
                           </div>
                           <label for="title" class="col-sm-2 col-form-label">판매 여부</label>
                           <div class="col-sm-4">
-                            <select class="form-control" id="exampleFormControlSelect1">
+                            <select class="form-control" id="pro_buy" name="pro_buy">
                               <option>판매 가능</option>
                               <option>판매 불가능</option>
                             </select>
@@ -250,8 +250,28 @@ desired effect
     <!-- ./wrapper -->
 
     <!-- REQUIRED JS SCRIPTS -->
-
     <%@ include file="/WEB-INF/views/admin/include/plugin2.jsp" %>
+      <script src="/bower_components/ckeditor/ckeditor.js" type="text/javascript"></script>
+
+      <script>
+        $(document).ready(function () {
+          // ckeditor 환경설정. 자바스크립트 Ojbect문법
+          var ckeditor_config = {
+            resize_enabled: false,
+            enterMode: CKEDITOR.ENTER_BR,
+            shiftEnterMode: CKEDITOR.ENTER_P,
+            toolbarCanCollapse: true,
+            removePlugins: "elementspath",
+            // 업로드 탭 기능 추가 속성. CKEditor에서 파일업로드해서 서버로 전송을 클릭하면, 이 주소가 동작된다.
+            filebrowserUploadUrl: '/admin/product/imageUpload'
+          }
+
+          //해당 이름으로 된 textarea에 에디터를 적용
+          CKEDITOR.replace("pro_content", ckeditor_config); 
+
+          console.log("ckeditor 버전: " + CKEDITOR.version);
+        });
+      </script>
   </body>
 
   </html>

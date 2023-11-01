@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.docmall.domain.AdminVO;
-import com.docmall.domain.MemberVO;
 import com.docmall.service.AdminService;
 
 import lombok.RequiredArgsConstructor;
@@ -53,7 +52,7 @@ public class AdminController {
 				// 로그인 성공 결과로 서버 측의 메모리를 사용하는 세션 형태 작업
 				session.setAttribute("adminStatus", db_vo); // logiStatus와 이름이 중복돼선 안 된다
 				
-				// 최근 접속(로그인) 시간 업데이트(개별적으로 진행할 것)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				// 최근 접속(로그인) 시간 업데이트
 				adminService.loginTime(vo.getAdmin_id());
 				
 				url = "/admin/admin_menu"; // 관리자 메뉴 페이지 주소

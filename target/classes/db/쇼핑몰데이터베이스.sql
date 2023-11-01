@@ -94,12 +94,14 @@ SELECT MBSP_PASSWORD FROM MBSP_TBL WHERE MBSP_ID = ?;
 --2.카테고리 테이블
 
 DROP TABLE CATEGORY_TBL;
-CREATE TABLE CATEGORY_TBL(
-        CG_CODE            NUMBER    PRIMARY KEY,    -- 카테고리 코드
-        CG_PARENT_CODE         NUMBER    NULL,           -- 상위카테고리 코드
-        CG_NAME            VARCHAR2(50)    NOT NULL,
-        FOREIGN KEY(CG_PARENT_CODE) REFERENCES CATEGORY_TBL(CG_CODE)
+CREATE TABLE category_tbl(
+        cg_code            NUMBER    PRIMARY KEY,    -- 카테고리 코드
+        cg_parent_code         NUMBER    NULL,           -- 상위카테고리 코드
+        cg_name            VARCHAR2(50)    NOT NULL,
+        FOREIGN KEY(cg_parent_code) REFERENCES category_tbl(cg_code)
 );
+
+cg_code, cg_parent_code, cg_name
 
 -- / -> /
 
@@ -249,6 +251,26 @@ DROP TABLE PRODUCT_TBL;
     NULL -> NOT NULL 로 변경 불가능
 
 */
+
+
+	CREATE TABLE product_tbl(
+	        pro_num             NUMBER  CONSTRAINT  pk_pro_num         PRIMARY KEY,
+	        cg_code             NUMBER            NULL,
+	        pro_name            VARCHAR2(50)            NOT NULL,
+	        pro_price           NUMBER                  NOT NULL,
+	        pro_discount        NUMBER                  NOT NULL,
+	        pro_publisher       VARCHAR2(50)            NOT NULL,
+	        pro_content         VARCHAR2(4000)  (CLOB)  NOT NULL,    
+	        pro_up_folder       VARCHAR(50)             NOT NULL,
+	        pro_img             VARCHAR(50)             NOT NULL,  
+	        pro_amount          NUMBER                  NOT NULL,
+	        pro_buy             CHAR(1)                 NOT NULL,
+	        pro_date            DATE DEFAULT sysdate    NOT NULL,
+	        pro_updatedate      DATE DEFAULT sysdate    NOT NULL,
+	        FOREIGN KEY(cg_code) REFERENCES category_tbl(cg_code)
+        );
+        
+        
 DROP TABLE PRODUCT_TBL;
 CREATE TABLE PRODUCT_TBL(
         PRO_NUM             NUMBER  CONSTRAINT  PK_PRO_NUM         PRIMARY KEY,
@@ -266,6 +288,8 @@ CREATE TABLE PRODUCT_TBL(
         PRO_UPDATEDATE      DATE DEFAULT SYSDATE    NOT NULL,
         FOREIGN KEY(CG_CODE) REFERENCES CATEGORY_TBL(CG_CODE)
 );
+
+pro_num, cg_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate
 
 pro_num, cat_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate
 
@@ -802,5 +826,4 @@ FROM (
             FROM BOARD_TBL b
     )
 WHERE RN >=4 AND RN <=6;
-
 
