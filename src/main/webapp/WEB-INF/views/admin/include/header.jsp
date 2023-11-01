@@ -20,6 +20,13 @@
           </a>
           <!-- Navbar Right Menu -->
           <div class="navbar-custom-menu">
+            
+            <ul class="nav navbar-nav">
+              <li class="dropdown messages-menu">
+                <a href="/">[DocMall]</a>
+              </li>
+            </ul>
+
             <ul class="nav navbar-nav">
               <li class="dropdown messages-menu">
                 <a href="#">최근 접속 시간: [

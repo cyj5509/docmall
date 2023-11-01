@@ -24,5 +24,11 @@ public class AdminServiceImpl implements AdminService {
 		
 		return adminMapper.admin_ok(admin_id);
 	}
+
+	@Override
+	public void loginTime(String admin_id) {
+
+		adminMapper.loginTime(admin_id);
+	}
 	
 }
