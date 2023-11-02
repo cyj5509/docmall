@@ -228,7 +228,7 @@ SELECT * FROM category_tbl;
 SELECT CG_CODE, CG_PARENT_CODE, CG_NAME FROM CATEGORY_TBL WHERE CG_PARENT_CODE IS NULL;
 
 -- 1차 카테고리 TOP의 2차 카테고리 출력.
-SELECT * FROM category_tbl WHERE cg_parent_code = 1;
+SELECT CG_CODE, CG_PARENT_CODE, CG_NAME FROM CATEGORY_TBL WHERE CG_PARENT_CODE = 1;
 
 -- 2차 카테고리 전부 출력하라.
 SELECT * FROM category_tbl WHERE cg_parent_code IS NOT NULL;
@@ -292,13 +292,22 @@ CREATE TABLE PRODUCT_TBL(
 
 -- pro_num, cg_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate
 
+-- 상품 테이블의 상품코드 컬럼(pro_num)에 사용하기 위한 목적
+CREATE SEQUENCE SEQ_PRODUCT_TBL;
+
 -- 상품마다 이미지의 개수가 다를 경우 별도의 테이블을 구성(권장)
 -- 상품설명 컬럼에 웹에디터를 이용한 태그코드 내용이 저장된다.
 
 -- PRO_CONTENT컬럼이 CLOB 데이타 타입은 비교명령어를 지원안함.
 SELECT * FROM product_tbl ORDER BY PRO_CONTENT ASC;
 
-
+-- cg_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy
+/*
+INSERT INTO
+		PRODUCT_TBL (CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY)
+VALUES
+  (#{cg_code}, #{pro_name}, #{pro_price}, #{pro_discount}, #{pro_publisher}, #{pro_content}, #{pro_up_folder}, #{pro_img}, #{pro_amount}, #{pro_buy})
+*/
 
 -- 상품등록작업
 -- pro_up_folder 컬럼 : 업로드파일의 저장 날짜폴더이름.   운영체제별 경로구분자  유형1) /2023/04/06/   유형2)\2023\04\06\ 역슬래쉬

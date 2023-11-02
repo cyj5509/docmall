@@ -76,7 +76,7 @@ desired effect
                 </div>
 
                 <!-- form 태그는 글쓰기나 수정 폼에서 사용 -->
-                <form role="form" method="post" action="상품 등록 매핑 URI">
+                <form role="form" method="post" action="/admin/product/pro_insert" enctype="multipart/form-data">
                   <!-- 절대 경로: /board/register와 동일 -->
                   <div class="box-body">
                     <div class="form-group row">
@@ -170,11 +170,11 @@ desired effect
                         <input
                           type="file"
                           class="form-control"
-                          name="uploadFile"
+                          name="uploadFile" 
                           id="uploadFile"
                           placeholder="작성자 입력..."
                         />
-                        <!-- name 속성은 실제로 사용하지 않음 -->
+                        <!-- name 속성은 실제로 사용하지 않는다, 즉, ProductVO의 pro_img와는 다른 용도이다. -->
                       </div>
                       <label for="title" class="col-sm-2 col-form-label"
                         >미리보기 이미지</label
@@ -196,6 +196,7 @@ desired effect
                           class="form-control"
                           rows="3"
                           name="pro_content"
+                          id="pro_content"
                         ></textarea>
                       </div>
                     </div>
@@ -206,7 +207,7 @@ desired effect
                       >
                       <div class="col-sm-4">
                         <input
-                          type="file"
+                          type="text"
                           class="form-control"
                           name="pro_amount"
                           id="pro_amount"
@@ -222,8 +223,9 @@ desired effect
                           id="pro_buy"
                           name="pro_buy"
                         >
-                          <option>판매 가능</option>
-                          <option>판매 불가능</option>
+                          <!-- value 값이 없으면 option 사이 값이 들어감 -->
+                          <option value="가능">판매 가능</option>
+                          <option value="불가능">판매 불가능</option>
                         </select>
                       </div>
                     </div>

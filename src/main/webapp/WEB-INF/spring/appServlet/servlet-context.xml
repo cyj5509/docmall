@@ -43,6 +43,10 @@
 		<beans:property name="maxInMemorySize" value="10485756"></beans:property>
 	</beans:bean>
 	
+	<!-- 업로드 폴더 경로 설정 작업 -->
+	<beans:bean id="uploadPath" class="java.lang.String">
+		<beans:constructor-arg value="C:\\Dev\\upload\\product"></beans:constructor-arg>
+	</beans:bean>
 	
 	
 </beans:beans>
