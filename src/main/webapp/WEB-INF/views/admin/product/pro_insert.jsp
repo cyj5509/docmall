@@ -96,10 +96,11 @@ desired effect
                           </c:forEach>
                         </select>
                       </div>
+
                       <div class="col-sm-3">
                         <select
                           class="form-control"
-                          id="cg_code"
+                          id="secondCategory"
                           name="cg_code"
                         >
                           <option>2차 카테고리 선택</option>
@@ -163,22 +164,26 @@ desired effect
 
                     <div class="form-group row">
                       <label for="title" class="col-sm-2 col-form-label"
-                        >상품이미지</label
+                        >상품 이미지</label
                       >
                       <div class="col-sm-4">
                         <input
                           type="file"
                           class="form-control"
-                          name=""
-                          id=""
+                          name="uploadFile"
+                          id="uploadFile"
                           placeholder="작성자 입력..."
                         />
+                        <!-- name 속성은 실제로 사용하지 않음 -->
                       </div>
                       <label for="title" class="col-sm-2 col-form-label"
                         >미리보기 이미지</label
                       >
                       <div class="col-sm-4">
-                        <img id="" style="width: 200px; height: 200px" />
+                        <img
+                          id="img_preview"
+                          style="width: 200px; height: 200px"
+                        />
                       </div>
                     </div>
 
@@ -377,12 +382,53 @@ desired effect
           // console.log("1차 카테고리 코드", cg_parent_code);
 
           // 1차 카테고리 선택에 의한 2차 카테고리 정보를 가져오는 url
-          let url = "/admin/category/secondCategory/" + cg_parent_code + ".json";
+          // .json 생략해도 기능에는 이상 없지만 추후 결과가 달라질 수 있음
+          let url =
+            "/admin/category/secondCategory/" + cg_parent_code + ".json";
 
           // $.getJSON(): 스프링에 요청 시 데이터를 JSON으로 받는 기능(Ajax 기능 제공)
-          $.getJSON(url, function (secondCategoryList) { // 콜백함수(스프링을 콜하고 백)
+          $.getJSON(url, function (secondCategoryList) {
+            // function() {}: 콜백함수(스프링을 콜하고 백)
 
+            // console.log("2차 카테고리 정보", secondCategoryList);
+            // console.log("2차 카테고리 개수", secondCategoryList.length);
+
+            // 2차 카테고리 select 태그 참조
+            let secondCategory = $("#secondCategory");
+            let optionStr = "";
+
+            // find("css 선택자"): 태그명, id 속성명, class 속성명
+            secondCategory.find("option").remove(); // 2차 카테고리의 option 제거
+            secondCategory.append(
+              "<option value=''>2차 카테고리 선택</option>"
+            );
+
+            // <option value='10'>바지</option>
+            for (let i = 0; i < secondCategoryList.length; i++) {
+              optionStr +=
+                "<option value='" +
+                secondCategoryList[i].cg_code +
+                "'>" +
+                secondCategoryList[i].cg_name +
+                "</option>";
+            }
+
+            // console.log(optionStr);
+            secondCategory.append(optionStr); // 2차 카테고리 option 태그들이 추가
           });
+        });
+        // 파일 첨부 시 이미지 미리보기
+        // 파일 첨부에 따른 이벤트 관련 정보를 e라는 매개변수를 통하여 참조가 됨
+        $("#uploadFile").change(function (e) {
+          let file = e.target.files[0]; // 선택 파일들 중 첫 번째 파일
+          let reader = new FileReader(); // 첨부된 파일을 이용하여, File 객체를 생성하는 용도
+
+          reader.readAsDataURL(file); // reader 객체에 파일 정보가 할당
+          reader.onload = function (e) {
+            // <img id="img_preview" style="width: 200px; height: 200px" />
+            // e.targer.result: reader 객체의 이미지 파일 정보
+            $("#img_preview").attr("src", e.target.result);
+          };
         });
       });
     </script>

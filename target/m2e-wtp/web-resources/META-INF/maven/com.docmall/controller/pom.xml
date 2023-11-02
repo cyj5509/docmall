@@ -210,7 +210,7 @@
 			<version>1.16</version>
 		</dependency>
 
-		<!-- JSON작업을 해주는 기능. 객체를 JSON으로 변환목적 -->
+		<!-- JSON 작업을 해주는 기능. 객체를 JSON으로 변환목적 -->
 		<!-- jackson-databind 의존성 라이브러리. jackson-annotations, jackson-core -->
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
