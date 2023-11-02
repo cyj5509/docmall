@@ -4,7 +4,7 @@ import lombok.Data;
 
 // cg_code, cg_parent_code, cg_name
 // @Data
-public class CategotyVO {
+public class CategoryVO {
 	
 	/*
 	CREATE TABLE category_tbl(
@@ -19,6 +19,7 @@ public class CategotyVO {
 	private Integer cg_parent_code; // 1차 카테고리 코드
 	private String cg_name;
 	
+	// 소스 메뉴 단축키: [Alt]+[Shift]+[S]
 	// @Getter, @Setter
 	public Integer getCg_code() {
 		return cg_code;

@@ -101,7 +101,7 @@ CREATE TABLE category_tbl(
         FOREIGN KEY(cg_parent_code) REFERENCES category_tbl(cg_code)
 );
 
-cg_code, cg_parent_code, cg_name
+-- cg_code, cg_parent_code, cg_name
 
 -- / -> /
 
@@ -220,18 +220,18 @@ INSERT INTO category_tbl (CG_CODE, CG_PARENT_CODE, CG_NAME)
     VALUES (44,7,'기타');
 
 commit; -- 스프링에서 확인 안 됨
-    
 
--- 1차카테고리 출력
-SELECT cat_code,cat_prtcode,cat_name FROM category_tbl WHERE cat_prtcode IS NULL;
+-- 전체 카테고리 출력    
+SELECT * FROM category_tbl;
 
--- 1차카테고리 TOP 의 2차카테고리 출력.
-SELECT * FROM category_tbl WHERE cat_prtcode = 1;
+-- 1차 카테고리 전부 출력
+SELECT CG_CODE, CG_PARENT_CODE, CG_NAME FROM CATEGORY_TBL WHERE CG_PARENT_CODE IS NULL;
 
+-- 1차 카테고리 TOP의 2차 카테고리 출력.
+SELECT * FROM category_tbl WHERE cg_parent_code = 1;
 
--- 2차카테고리 전부 출력하라.
-SELECT * FROM category_tbl WHERE cat_prtcode IS NOT NULL;
-
+-- 2차 카테고리 전부 출력하라.
+SELECT * FROM category_tbl WHERE cg_parent_code IS NOT NULL;
 
 
 SELECT * FROM category_tbl;
@@ -252,7 +252,8 @@ DROP TABLE PRODUCT_TBL;
 
 */
 
-
+-- COPY % PASTE
+/*
 	CREATE TABLE product_tbl(
 	        pro_num             NUMBER  CONSTRAINT  pk_pro_num         PRIMARY KEY,
 	        cg_code             NUMBER            NULL,
@@ -261,16 +262,16 @@ DROP TABLE PRODUCT_TBL;
 	        pro_discount        NUMBER                  NOT NULL,
 	        pro_publisher       VARCHAR2(50)            NOT NULL,
 	        pro_content         VARCHAR2(4000)  (CLOB)  NOT NULL,    
-	        pro_up_folder       VARCHAR(50)             NOT NULL,
-	        pro_img             VARCHAR(50)             NOT NULL,  
+	        pro_up_folder       VARCHAR2(50)             NOT NULL,
+	        pro_img             VARCHAR2(50)             NOT NULL,  
 	        pro_amount          NUMBER                  NOT NULL,
 	        pro_buy             CHAR(1)                 NOT NULL,
 	        pro_date            DATE DEFAULT sysdate    NOT NULL,
 	        pro_updatedate      DATE DEFAULT sysdate    NOT NULL,
 	        FOREIGN KEY(cg_code) REFERENCES category_tbl(cg_code)
         );
-        
-        
+*/
+
 DROP TABLE PRODUCT_TBL;
 CREATE TABLE PRODUCT_TBL(
         PRO_NUM             NUMBER  CONSTRAINT  PK_PRO_NUM         PRIMARY KEY,
@@ -280,8 +281,8 @@ CREATE TABLE PRODUCT_TBL(
         PRO_DISCOUNT        NUMBER                  NOT NULL,
         PRO_PUBLISHER       VARCHAR2(50)            NOT NULL,
         PRO_CONTENT         VARCHAR2(4000)  /* CLOB */                  NOT NULL,       -- 내용이 4000BYTE 초과여부판단?
-        PRO_UP_FOLDER       VARCHAR(50)             NOT NULL,
-        PRO_IMG             VARCHAR(50)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
+        PRO_UP_FOLDER       VARCHAR2(50)             NOT NULL,
+        PRO_IMG             VARCHAR2(50)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
         PRO_AMOUNT          NUMBER                  NOT NULL,
         PRO_BUY             CHAR(1)                 NOT NULL,
         PRO_DATE            DATE DEFAULT SYSDATE    NOT NULL,
@@ -289,9 +290,7 @@ CREATE TABLE PRODUCT_TBL(
         FOREIGN KEY(CG_CODE) REFERENCES CATEGORY_TBL(CG_CODE)
 );
 
-pro_num, cg_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate
-
-pro_num, cat_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate
+-- pro_num, cg_code, pro_name, pro_price, pro_discount, pro_publisher, pro_content, pro_up_folder, pro_img, pro_amount, pro_buy, pro_date, pro_updatedate
 
 -- 상품마다 이미지의 개수가 다를 경우 별도의 테이블을 구성(권장)
 -- 상품설명 컬럼에 웹에디터를 이용한 태그코드 내용이 저장된다.
@@ -754,6 +753,14 @@ CREATE TABLE admin_tbl (
     admin_pw    CHAR(60)    NOT NULL,
     admin_visit_date    DATE
 );
+
+/*
+CREATE TABLE admin_tbl (
+    admin_id    VARCHAR2(15)    PRIMARY KEY,
+    admin_pw    CHAR(60)    NOT NULL,
+    admin_visit_date    DATE
+);
+*/
 
 admin_id, admin_pw, admin_visit_date
 
