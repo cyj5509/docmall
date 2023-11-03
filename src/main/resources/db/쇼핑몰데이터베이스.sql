@@ -1,6 +1,8 @@
 /*
-
+CREATE USER spring IDENTIFIED BY spring;
+GRANT RESOURCE, CONNECT TO spring;
 */
+
 DROP TABLE MBSP_TBL;
 
 -- 한글 데이터 크기?
