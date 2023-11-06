@@ -172,7 +172,7 @@ public class MemberController {
 			}
 		} else {
 			// 아이디가 일치하지 않는 경우
-			url = "/member/login"; // 로그인 폼 주소
+			url = "/member/confirmPw"; // 로그인 폼 주소
 			msg = "아이디가 일치하지 않습니다.";
 			rttr.addFlashAttribute("msg", msg); // // 로그인 폼인 login.jsp 파일에서 사용 목적
 		}

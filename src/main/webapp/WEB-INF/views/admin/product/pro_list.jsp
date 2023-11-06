@@ -93,8 +93,8 @@ desired effect
                         <tr>
                           <td><input type="checkbox" id="checkbox"></td>
                           <td>${productVO.pro_num}</td>
-                          <td>
-                            <a class="move" href="#" data-bno="${productVO.pro_num}"><img src="" alt="">${productVO.pro_up_folder} ${productVO.pro_img}</a>
+                          <td>                        
+                            <a class="move" href="#" data-bno="${productVO.pro_num }"><img src="/admin/product/imageDisplay?dateFolderName=${productVO.pro_up_folder }&fileName=s_${productVO.pro_img }"></a>
                             <a class="move" href="#" data-bno="${productVO.pro_num}">${productVO.pro_name}</a>
                           </td> <!-- 클래스명 move는 제목과 관련 -->
                           <td> ${productVO.pro_price}</td>
@@ -118,7 +118,7 @@ desired effect
                           <!-- 이전 표시 여부 -->
                           <c:if test="${pageMaker.prev}">
                             <li class="page-item">
-                              <a href="/admin/product/pro_list?pageNum=${pageMaker.startPage - 1}" class="page-link">Previous</a>
+                              <a href="/board/list?pageNum=${pageMaker.startPage - 1}" class="page-link movepage">Previous</a>
                             </li>
                           </c:if>
   
@@ -127,14 +127,14 @@ desired effect
                           <!--  [이전] 11 12 13 14 15 16 17 18 19 20 [다음] -->
                           <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="num">
                             <li class='page-item ${pageMaker.cri.pageNum == num ? "active" : "" }' aria-current="page">
-                              <a class="page-link movepage" href="#" data-page="${num}">${num}</a> <!-- 클래스명 movepage는 페이지 번호와 관련 -->
+                              <a class="page-link movepage" href="#" data-page="${num}">${num}</a> <!-- 임의로 만든 클래스명 movepage는 페이지 번호와 관련 -->
                             </li>
                           </c:forEach>
   
                           <!-- 다음 표시 여부 -->
                           <c:if test="${pageMaker.next}">
                             <li class="page-item">
-                              <a href="/admin/product/pro_list?pageNum=${pageMaker.endPage + 1}" class="page-link">Next</a>
+                              <a href="/board/list?pageNum=${pageMaker.endPage + 1}" class="page-link movepage">Next</a>
                             </li>
                           </c:if>
                         </ul>
@@ -159,13 +159,13 @@ desired effect
   
                       <!-- <form id="actionForm">의 용도 -->
                       <!-- 1) 페이지 번호([이전] 1 2 3 4 5 ... [다음])를 클릭할 때 사용: action="/board/get" 
-                      <!-- 2) 목록에서 제목을 클릭할 때 사용: action="/board/get" -->
-                      <form id="actionForm" action="/admin/product/pro_list" method="get">
+                      <!-- 2) 목록에서 상품 이미지 또는 상품명을 클릭할 때 사용: action="/board/get" -->
+                      <form id="actionForm" action="" method="get">
                         <input type="hidden" name="pageNum" id="pageNum" value="${pageMaker.cri.pageNum}" />
                         <input type="hidden" name="amount" id="amount" value="${pageMaker.cri.amount}" />
                         <input type="hidden" name="type" id="type" value="${pageMaker.cri.type}" />
                         <input type="hidden" name="keyword" id="keyword" value="${pageMaker.cri.keyword}" />
-                        <input type="hidden" name="bno" id="bno" />
+                        <input type="hidden" name="pro_num" id="pro_num" />
                       </form>
                     </div>
                   </div>
@@ -287,79 +287,15 @@ desired effect
 
     <script>
       $(document).ready(function () {
-        // ckeditor 환경설정. 자바스크립트 Ojbect문법
-        var ckeditor_config = {
-          resize_enabled: false,
-          enterMode: CKEDITOR.ENTER_BR,
-          shiftEnterMode: CKEDITOR.ENTER_P,
-          toolbarCanCollapse: true,
-          removePlugins: "elementspath",
-          // 업로드 탭 기능 추가 속성. CKEditor에서 파일업로드해서 서버로 전송을 클릭하면, 이 주소가 동작된다.
-          filebrowserUploadUrl: "/admin/product/imageUpload",
-        };
+        
+        let actionForm = $("#actionForm");
 
-        //해당 이름으로 된 textarea에 에디터를 적용
-        CKEDITOR.replace("pro_content", ckeditor_config);
+        // [이전] 1 2 3 4 5 ... [다음] 클릭 이벤트 설정. <a> 태그
+        $(".movepage").on("click", function(e) {
+          e.preventDefault(); // a 태그의 링크 기능을 제거
 
-        console.log("ckeditor 버전: " + CKEDITOR.version);
-
-        // 1차 카테고리 선택
-        // document.getElementById("firstCategory")
-        $("#firstCategory").change(function () {
-          // $(this): option 태그 중 선택한 option 태그를 가리킴
-          let cg_parent_code = $(this).val();
-
-          // console.log("1차 카테고리 코드", cg_parent_code);
-
-          // 1차 카테고리 선택에 의한 2차 카테고리 정보를 가져오는 url
-          // .json 생략해도 기능에는 이상 없지만 추후 결과가 달라질 수 있음
-          let url =
-            "/admin/category/secondCategory/" + cg_parent_code + ".json";
-
-          // $.getJSON(): 스프링에 요청 시 데이터를 JSON으로 받는 기능(Ajax 기능 제공)
-          $.getJSON(url, function (secondCategoryList) {
-            // function() {}: 콜백함수(스프링을 콜하고 백)
-
-            // console.log("2차 카테고리 정보", secondCategoryList);
-            // console.log("2차 카테고리 개수", secondCategoryList.length);
-
-            // 2차 카테고리 select 태그 참조
-            let secondCategory = $("#secondCategory");
-            let optionStr = "";
-
-            // find("css 선택자"): 태그명, id 속성명, class 속성명
-            secondCategory.find("option").remove(); // 2차 카테고리의 option 제거
-            secondCategory.append(
-              "<option value=''>2차 카테고리 선택</option>"
-            );
-
-            // <option value='10'>바지</option>
-            for (let i = 0; i < secondCategoryList.length; i++) {
-              optionStr +=
-                "<option value='" +
-                secondCategoryList[i].cg_code +
-                "'>" +
-                secondCategoryList[i].cg_name +
-                "</option>";
-            }
-
-            // console.log(optionStr);
-            secondCategory.append(optionStr); // 2차 카테고리 option 태그들이 추가
-          });
-        });
-        // 파일 첨부 시 이미지 미리보기
-        // 파일 첨부에 따른 이벤트 관련 정보를 e라는 매개변수를 통하여 참조가 됨
-        $("#uploadFile").change(function (e) {
-          let file = e.target.files[0]; // 선택 파일들 중 첫 번째 파일
-          let reader = new FileReader(); // 첨부된 파일을 이용하여, File 객체를 생성하는 용도
-
-          reader.readAsDataURL(file); // reader 객체에 파일 정보가 할당
-          reader.onload = function (e) {
-            // <img id="img_preview" style="width: 200px; height: 200px" />
-            // e.targer.result: reader 객체의 이미지 파일 정보
-            $("#img_preview").attr("src", e.target.result);
-          };
-        });
+          actionForm.attr("action", "/admin/product/pro_list");
+        });        
       });
     </script>
   </body>

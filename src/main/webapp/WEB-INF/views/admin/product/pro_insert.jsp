@@ -224,8 +224,10 @@ desired effect
                           name="pro_buy"
                         >
                           <!-- value 값이 없으면 option 사이 값이 들어감 -->
-                          <option value="가능">판매 가능</option>
-                          <option value="불가능">판매 불가능</option>
+                          <!-- 상품 테이블에서 PRO_BUY CHAR(1) NOT NULL, -- VARCHAR(2) -> CHAR(1) -->
+                          <!-- 기존: value값은 각각 가능, 불가능이었음 -->
+                          <option value="Y">판매 가능</option>
+                          <option value="N">판매 불가능</option>
                         </select>
                       </div>
                     </div>

@@ -10,6 +10,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
+
 // import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -160,6 +163,9 @@ public class AdProductController {
 	// 상품 리스트: 목록과 페이징
 	@GetMapping("/pro_list")
 	public void pro_list(Criteria cri, Model model) throws Exception {
+		
+		// 10 -> 2
+		cri.setAmount(2); // Criteria에서 this(1, 2);
 	
 		List<ProductVO> pro_list = adProductService.pro_list(cri);
 		
@@ -172,6 +178,15 @@ public class AdProductController {
 		int totalCount = adProductService.getTotalCount(cri);
 		model.addAttribute("pageMaker", new PageDTO(cri, totalCount));
 	}
+	
+	//상품리스트에서 보여줄 이미지.  <img src="매핑주소">
+	@ResponseBody
+	@GetMapping("/imageDisplay") // /admin/product/imageDisplay?dateFolderName=값1&fileName=값2
+	public ResponseEntity<byte[]> imageDisplay(String dateFolderName, String fileName) throws Exception {
+
+		return FileUtils.getFile(uploadPath + dateFolderName, fileName);
+	}
+	
 	
 
 }

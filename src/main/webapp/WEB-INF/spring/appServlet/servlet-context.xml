@@ -47,12 +47,12 @@
 	<!-- 다음과 같이 동작. String uploadPath = new String("C:\\Dev\\upload\\product") -->
 	<!-- 스프링부트에서는 pom.xml 말고는 설정과 관련된 xml 파일 없음 -->
 	<beans:bean id="uploadPath" class="java.lang.String">
-		<beans:constructor-arg value="C:\\Dev\\upload\\product"></beans:constructor-arg>
+		<beans:constructor-arg value="C:\\Dev\\upload\\product\\"></beans:constructor-arg>
 	</beans:bean>
 	
 	<!-- CKEditor에서 업로드되는 폴더 경로 설정 -->
 	<beans:bean id="uploadCKPath" class="java.lang.String">
-		<beans:constructor-arg value="C:\\Dev\\upload\\ckeditor"></beans:constructor-arg>
+		<beans:constructor-arg value="C:\\Dev\\upload\\ckeditor\\"></beans:constructor-arg>
 	</beans:bean>
 	
 	

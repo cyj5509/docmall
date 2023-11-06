@@ -21,7 +21,7 @@ public class Criteria {
 
 	// 아래 기본 생성자를 생략해선 안 된다.
 	public Criteria() {
-		this(1, 10);
+		this(1, 10); // this(1, 10); -> this(1, 2); 또는 	AdProductController에서 10 -> 2. cri.setAmount(2);
 		System.out.println("Criteria 기본 생성자 호출");
 	}
 
