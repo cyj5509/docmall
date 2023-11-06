@@ -35,18 +35,19 @@ public class FileUtils {
 
 	// 서버에 파일 업로드 기능 구현 및 실제 업로드한 파일명 반환
 	/*
-	< 매개 변수의 의미 >
-	
-	1. String uploadFolder: 서버 측의 업로드될 폴더 -> C:\\Dev\\upload\\product(servlet-context.xml 참고)
-	2. String dateFolder: 이미지 파일을 저장할 날짜 폴더명 -> 2023\11\03
-	3. MultipartFile uploadFile: 업로드될 파일을 참조하는 객체
-	*/
+	 * < 매개 변수의 의미 >
+	 * 
+	 * 1. String uploadFolder: 서버 측의 업로드될 폴더 ->
+	 * C:\\Dev\\upload\\product(servlet-context.xml 참고) 2. String dateFolder: 이미지
+	 * 파일을 저장할 날짜 폴더명 -> 2023\11\03 3. MultipartFile uploadFile: 업로드될 파일을 참조하는 객체
+	 */
 	public static String uploadFile(String uploadFolder, String dateFolder, MultipartFile uploadFile) {
 
 		String realUploadFileName = ""; // 실제 업로드한 파일 이름(파일 이름 중복 방지)
 
 		// File 클래스: 파일과 폴더 관련 작업하는 기능
-		File file = new File(uploadFolder, dateFolder); // 예) "C:/Dev/devtools/upload/" -> // "C:/Dev/devtools/upload/2023/11/02"
+		File file = new File(uploadFolder, dateFolder); // 예) "C:/Dev/devtools/upload/" -> //
+														// "C:/Dev/devtools/upload/2023/11/02"
 
 		// 폴더 경로가 없으면 폴더명을 생성함
 		if (file.exists() == false) {
@@ -64,26 +65,26 @@ public class FileUtils {
 			File saveFile = new File(file, realUploadFileName);
 			// 파일 업로드(파일 복사)
 			uploadFile.transferTo(saveFile); // 파일 업로드의 핵심 메서드(이전 작업들은 해당 코드를 도출하기 위한 작업)
-			
+
 			// Thumbnail 작업
 			// 원본 이미지가 파일 크기가 커서 브라우저에 리스트로 사용 시 로딩는 시간이 길어진다.
 			// 원본 이미지를 파일 크기와 해상도를 낮춰 작은 형태로 이미지로 만드는 것
-			if (checkImageType(saveFile)) { // 첨부된 파일이 이미지일 경우라면, 
-				
+			if (checkImageType(saveFile)) { // 첨부된 파일이 이미지일 경우라면,
+
 				// 파일 출력 스트림 클래스
-				// 밑에 코드가 실행이 되면 두 개의 파일이 생성('s_'로 시작하는 0KB 용량의 썸네일 파일 포함) 
+				// 밑에 코드가 실행이 되면 두 개의 파일이 생성('s_'로 시작하는 0KB 용량의 썸네일 파일 포함)
 				FileOutputStream thumbnail = new FileOutputStream(new File(file, "s_" + realUploadFileName));
-				
+
 				// 썸네일 작업기능 라이브러리에서 제공하는 클래스(pom.xml 참고)
 				// 원본 이미지 파일의 내용을 스트림 방식으로 읽어서 썸네일 이미지 파일에 쓰는 작업
 				// Thumbnailator.createThumbnail(원본 파일의 입력 스트림, 사본(썸네일 파일 객체), 100, 100);
 				Thumbnailator.createThumbnail(uploadFile.getInputStream(), thumbnail, 100, 100);
-				
+
 				thumbnail.close();
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace(); // 파일 업로드 시 예외가 발생되면 예외 관련 정보를 출력	
+			e.printStackTrace(); // 파일 업로드 시 예외가 발생되면 예외 관련 정보를 출력
 		}
 
 		return realUploadFileName; // 상품 테이블에 파일명이 상품 이미지명으로 저장
@@ -100,35 +101,36 @@ public class FileUtils {
 			isImageType = contentType.startsWith("image");
 		} catch (IOException e) {
 			e.printStackTrace();
-			
+
 		}
 
 		return isImageType;
 	}
-	
-	//프로젝트 외부폴더에서 관리되고 있는 상품이미지를 브라우저의 <img src="매핑주소"> 이미지태그로 부터 요청이 들어왔을 때 바이트배열로 보내는 주는 작업.
-		// String uploadPath : 업로드 폴더경로
-		// String fileName : 날짜폴더경로를 포함한 파일명.(db)
-		// ResponseEntity 클래스 - 1)헤더(header) 2)바디(body)-데이타 3)상태코드
-		public static ResponseEntity<byte[]> getFile(String uploadPath, String fileName) throws Exception {
-			
-			ResponseEntity<byte[]> entity = null;
-			
-			File file = new File(uploadPath, fileName); // 상품이미지파일을 참조한는 파일객체
-			
-			//파일이 해당경로에 존재하지 않으면
-			if(!file.exists()) {
-				return entity; // null 로 리턴.
-			}
-			
-			//1)Header
-			// Files.probeContentType(file.toPath()) : image/jpeg
-			// file : 716a5e3e-9e52-45ba-a512-6509595437fa_pineapple.jpg
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Content-Type", Files.probeContentType(file.toPath()));
-			
-			entity = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
-			
-			return entity;
+
+	// 프로젝트 외부폴더에서 관리되고 있는 상품이미지를 브라우저의 <img src="매핑주소"> 이미지태그로 부터 요청이 들어왔을 때 바이트배열로
+	// 보내는 주는 작업.
+	// String uploadPath : 업로드 폴더경로
+	// String fileName : 날짜폴더경로를 포함한 파일명.(db)
+	// ResponseEntity 클래스 - 1)헤더(header) 2)바디(body)-데이타 3)상태코드
+	public static ResponseEntity<byte[]> getFile(String uploadPath, String fileName) throws Exception {
+
+		ResponseEntity<byte[]> entity = null;
+
+		File file = new File(uploadPath, fileName); // 상품이미지파일을 참조한는 파일객체
+
+		// 파일이 해당경로에 존재하지 않으면
+		if (!file.exists()) {
+			return entity; // null 로 리턴.
 		}
+
+		// 1)Header
+		// Files.probeContentType(file.toPath()) : image/jpeg
+		// file : 716a5e3e-9e52-45ba-a512-6509595437fa_pineapple.jpg
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", Files.probeContentType(file.toPath()));
+
+		entity = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+
+		return entity;
+	}
 }

@@ -110,13 +110,13 @@ public class AdProductController {
 		*/
 		// 클라이언트에게 보내는 응답 설정
 		response.setCharacterEncoding("utf-8");
-		response.setContentType("/text/html; charser=utf-8");
+		response.setContentType("/text/html; charset=utf-8");
 		
 		try {
 			
 			// 1) 파일 업로드 작업
 			String fileName = upload.getOriginalFilename(); // 클라이언트에서 전송한 파일 이름
-			byte[] bytes = uploadCKPath.getBytes(); // 업로드한 파일을 byte 배열로 읽어들임
+			byte[] bytes = upload.getBytes(); // 업로드한 파일을 byte 배열로 읽어들임
 			
 			String ckUploadPath = uploadCKPath + fileName;
 			
@@ -179,7 +179,7 @@ public class AdProductController {
 		model.addAttribute("pageMaker", new PageDTO(cri, totalCount));
 	}
 	
-	//상품리스트에서 보여줄 이미지.  <img src="매핑주소">
+	// 상품리스트에서 보여줄 이미지. <img src="매핑주소">
 	@ResponseBody
 	@GetMapping("/imageDisplay") // /admin/product/imageDisplay?dateFolderName=값1&fileName=값2
 	public ResponseEntity<byte[]> imageDisplay(String dateFolderName, String fileName) throws Exception {

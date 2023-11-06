@@ -9,24 +9,24 @@ import lombok.Data;
 @Data
 public class ProductVO {
 
-		/*
-		CREATE TABLE product_tbl(
-	        pro_num             NUMBER  CONSTRAINT  pk_pro_num         PRIMARY KEY,
-	        cg_code             NUMBER            NULL,
-	        pro_name            VARCHAR2(50)            NOT NULL,
-	        pro_price           NUMBER                  NOT NULL,
-	        pro_discount        NUMBER                  NOT NULL,
-	        pro_publisher       VARCHAR2(50)            NOT NULL,
-	        pro_content         VARCHAR2(4000)  (CLOB)  NOT NULL,    
-	        pro_up_folder       VARCHAR2(50)             NOT NULL,
-	        pro_img             VARCHAR2(50)             NOT NULL,  
-	        pro_amount          NUMBER                  NOT NULL,
-	        pro_buy             CHAR(1)                 NOT NULL,
-	        pro_date            DATE DEFAULT sysdate    NOT NULL,
-	        pro_updatedate      DATE DEFAULT sysdate    NOT NULL,
-	        FOREIGN KEY(cg_code) REFERENCES category_tbl(cg_code)
-        );
-		*/
+/*
+CREATE TABLE PRODUCT_TBL(
+        PRO_NUM             NUMBER  CONSTRAINT  PK_PRO_NUM         PRIMARY KEY,
+        CG_CODE             NUMBER            		NULL,
+        PRO_NAME            VARCHAR2(50)          	NOT NULL,
+        PRO_PRICE           NUMBER                   NOT NULL,
+        PRO_DISCOUNT        NUMBER                   NOT NULL,
+        PRO_PUBLISHER       VARCHAR2(50)             NOT NULL,
+        PRO_CONTENT         VARCHAR2(4000)           NOT NULL,       -- 내용이 4000BYTE 초과여부판단?
+        PRO_UP_FOLDER       VARCHAR2(50)             NOT NULL,
+        PRO_IMG             VARCHAR2(100)            NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
+        PRO_AMOUNT          NUMBER                   NOT NULL,
+        PRO_BUY             CHAR(1)                  NOT NULL, -- VARCHAR(2) -> CHAR(1)
+        PRO_DATE            DATE DEFAULT SYSDATE     NOT NULL,
+        PRO_UPDATEDATE      DATE DEFAULT SYSDATE     NOT NULL,
+        FOREIGN KEY(CG_CODE) REFERENCES CATEGORY_TBL(CG_CODE)
+);
+*/
 	
 	// pro_nun, pro_up_folder, pro_img, pro_date, pro_updatedate는 직접 입력 받지 않음
 	
