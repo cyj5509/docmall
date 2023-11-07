@@ -82,9 +82,7 @@ desired effect
                               <select class="form-control" id="firstCategory">
                                 <option>1차 카테고리 선택</option>
                                 <c:forEach items="${firstCategoryList}" var="categoryVO">
-                                  <option value="${categoryVO.cg_code}"
-                                    ${categoryVO.cg_code==first_category.cg_parent_code ? 'selected' : '' }>
-                                    ${categoryVO.cg_name}</option>
+                                  <option value="${categoryVO.cg_code}" ${categoryVO.cg_code==first_category.cg_parent_code ? 'selected' : '' }>${categoryVO.cg_name}</option>
                                 </c:forEach>
                               </select>
                             </div>
