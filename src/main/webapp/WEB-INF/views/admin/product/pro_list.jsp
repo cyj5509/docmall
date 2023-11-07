@@ -420,8 +420,7 @@ desired effect
 
               actionForm.attr("method", "get");
               actionForm.attr("action", "/admin/product/pro_edit");
-              actionForm.submit();                 
-              
+              actionForm.submit();
             });
 
           }); // ready 이벤트
