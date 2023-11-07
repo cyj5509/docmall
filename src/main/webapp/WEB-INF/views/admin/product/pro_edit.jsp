@@ -69,11 +69,11 @@ desired effect
                   <div class="col-md-12">
                     <div class="box box-primary">
                       <div class="box-header with-border">
-                        <h3 class="box-title mt-5">Product Insert</h3>
+                        <h3 class="box-title mt-5">Product Edit</h3>
                       </div>
 
                       <!-- form 태그는 글쓰기나 수정 폼에서 사용 -->
-                      <form role="form" method="post" action="/admin/product/pro_insert" enctype="multipart/form-data">
+                      <form role="form" method="post" action="/admin/product/pro_edit" enctype="multipart/form-data">
                         <!-- 절대 경로: /board/register와 동일 -->
                         <div class="box-body">
                           <div class="form-group row">
@@ -82,9 +82,9 @@ desired effect
                               <select class="form-control" id="firstCategory">
                                 <option>1차 카테고리 선택</option>
                                 <c:forEach items="${firstCategoryList}" var="categoryVO">
-                                  <option value="${categoryVO.cg_code}">
-                                    ${categoryVO.cg_name}
-                                  </option>
+                                  <option value="${categoryVO.cg_code}"
+                                    ${categoryVO.cg_code==first_category.cg_parent_code ? 'selected' : '' }>
+                                    ${categoryVO.cg_name}</option>
                                 </c:forEach>
                               </select>
                             </div>
@@ -100,12 +100,12 @@ desired effect
                             <label for="title" class="col-sm-2 col-form-label">상품명</label>
                             <div class="col-sm-4">
                               <input type="text" class="form-control" name="pro_name" id="pro_name"
-                                placeholder="상품명 입력..." />
+                                value="${productVO.pro_name}" placeholder="상품명 입력..." />
                             </div>
                             <label for="title" class="col-sm-2 col-form-label">상품가격</label>
                             <div class="col-sm-4">
                               <input type="text" class="form-control" name="pro_price" id="pro_price"
-                                placeholder="상품가격 입력..." />
+                                value="${productVO.pro_price}" placeholder="상품가격 입력..." />
                             </div>
                           </div>
 
@@ -113,12 +113,12 @@ desired effect
                             <label for="title" class="col-sm-2 col-form-label">할인율</label>
                             <div class="col-sm-4">
                               <input type="text" class="form-control" name="pro_discount" id="pro_discount"
-                                placeholder="할인율 입력..." />
+                                value="${productVO.pro_discount}" placeholder="할인율 입력..." />
                             </div>
                             <label for="title" class="col-sm-2 col-form-label">제조사</label>
                             <div class="col-sm-4">
                               <input type="text" class="form-control" name="pro_publisher" id="pro_publisher"
-                                placeholder="제조사 입력..." />
+                                value="${productVO.pro_publisher}" placeholder="제조사 입력..." />
                             </div>
                           </div>
 
@@ -138,7 +138,8 @@ desired effect
                           <div class="form-group row">
                             <label for="title" class="col-sm-2 col-form-label">상품 설명</label>
                             <div class="col-sm-10">
-                              <textarea class="form-control" rows="3" name="pro_content" id="pro_content"></textarea>
+                              <textarea class="form-control" rows="3" name="pro_content"
+                                id="pro_content">${productVO.pro_content}</textarea>
                             </div>
                           </div>
 
@@ -146,7 +147,7 @@ desired effect
                             <label for="title" class="col-sm-2 col-form-label">수량</label>
                             <div class="col-sm-4">
                               <input type="text" class="form-control" name="pro_amount" id="pro_amount"
-                                placeholder="수량 입력..." />
+                                value="${productVO.pro_amount}" placeholder="수량 입력..." />
                             </div>
                             <label for="title" class="col-sm-2 col-form-label">판매 여부</label>
                             <div class="col-sm-4">
@@ -154,8 +155,8 @@ desired effect
                                 <!-- value 값이 없으면 option 사이 값이 들어감 -->
                                 <!-- 상품 테이블에서 PRO_BUY CHAR(1) NOT NULL, -- VARCHAR(2) -> CHAR(1) -->
                                 <!-- 기존: value값은 각각 가능, 불가능이었음 -->
-                                <option value="Y">판매 가능</option>
-                                <option value="N">판매 불가능</option>
+                                <option value="Y" ${productVO.pro_buy}=='Y' ? 'selected' : ''>판매 가능</option>
+                                <option value="N" ${productVO.pro_buy}=='N' ? 'selected' : ''>판매 불가능</option>
                               </select>
                             </div>
                           </div>

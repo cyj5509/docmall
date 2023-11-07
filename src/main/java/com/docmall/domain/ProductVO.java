@@ -28,16 +28,24 @@ CREATE TABLE PRODUCT_TBL(
 );
 */
 	
-	// pro_nun, pro_up_folder, pro_img, pro_date, pro_updatedate는 직접 입력 받지 않음
+	// pro_num, pro_up_folder, pro_img, pro_date, pro_updatedate는 직접 입력 받지 않음
 	
-	private Integer pro_num, cg_code; // pro_num: 시퀀스 생성(사용자로부터 직접 입력받지 않음), cg_code: 2차 카테고리 코드
-	private String pro_name;
-	private int pro_price, pro_discount;
-	// pro_up_folder, pro_img: 클라이언트에서 직접 입력받지 않고 스프링에서 별도로 처리(매퍼 작업)
-	private String pro_publisher, pro_content, pro_up_folder, pro_img;
-	private int pro_amount;
-	private String pro_buy;
-	private Date pro_date, pro_updatedate; // pro_date, pro_updatedate: 직접 입력 받지 않음
-	
-	// private MultipartFile uploadFile; 여기서 작성거나 컨트롤러에서 매개변수로 활용
+		private Integer pro_num; // 시퀀스 생성(사용자로부터 직접 입력받지 않음)
+		private Integer cg_code; // cg_code: 2차 카테고리 코드
+		private String pro_name;
+		private int pro_price;
+		private int pro_discount;
+
+		private String pro_publisher;
+		private String pro_content;
+		private String pro_up_folder; // 클라이언트에서 직접 입력받지 않고 스프링에서 별도로 처리(매퍼 작업)
+		private String pro_img; // 클라이언트에서 직접 입력받지 않고 스프링에서 별도로 처리(매퍼 작업)
+		
+		private int pro_amount;
+		private String pro_buy;
+		
+		private Date pro_date;
+		private Date pro_updatedate; //직접 입력 받지 않음
+		
+		// private MultipartFile uploadFile; 여기서 작성하거나 컨트롤러에서 매개변수로 활용
 }
