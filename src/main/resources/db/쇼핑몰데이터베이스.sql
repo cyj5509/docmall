@@ -1,7 +1,6 @@
 /*
-CREATE USER spring IDENTIFIED BY spring;
-GRANT RESOURCE, CONNECT TO spring;
 */
+
 
 DROP TABLE MBSP_TBL;
 
@@ -230,11 +229,13 @@ SELECT * FROM category_tbl;
 SELECT CG_CODE, CG_PARENT_CODE, CG_NAME FROM CATEGORY_TBL WHERE CG_PARENT_CODE IS NULL;
 
 -- 1차 카테고리 TOP의 2차 카테고리 출력.
-SELECT CG_CODE, CG_PARENT_CODE, CG_NAME FROM CATEGORY_TBL WHERE CG_PARENT_CODE = 1;
+SELECT cg_code, cg_parent_code, cg_name FROM category_tbl WHERE cg_parent_code = 1;
+
+-- 2차 카테고리 8의 부모(1차 카테고리 정보)
+SELECT * FROM category_tbl where cg_code = 8;
 
 -- 2차 카테고리 전부 출력하라.
 SELECT * FROM category_tbl WHERE cg_parent_code IS NOT NULL;
-
 
 SELECT * FROM category_tbl;
 COMMIT;
@@ -284,9 +285,9 @@ CREATE TABLE PRODUCT_TBL(
         PRO_PUBLISHER       VARCHAR2(50)            NOT NULL,
         PRO_CONTENT         VARCHAR2(4000)  /* CLOB */                  NOT NULL,       -- 내용이 4000BYTE 초과여부판단?
         PRO_UP_FOLDER       VARCHAR2(50)             NOT NULL,
-        PRO_IMG             VARCHAR2(50)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
+        PRO_IMG             VARCHAR2(100)             NOT NULL,  -- 날짜폴더경로가 포함하여 파일이름저장
         PRO_AMOUNT          NUMBER                  NOT NULL,
-        PRO_BUY             VARCHAR2(10)                 NOT NULL,
+        PRO_BUY             CHAR(1)                 NOT NULL, -- VARCHAR(10) -> CHAR(1)
         PRO_DATE            DATE DEFAULT SYSDATE    NOT NULL,
         PRO_UPDATEDATE      DATE DEFAULT SYSDATE    NOT NULL,
         FOREIGN KEY(CG_CODE) REFERENCES CATEGORY_TBL(CG_CODE)
@@ -313,6 +314,8 @@ VALUES
 
 -- 상품등록작업
 -- pro_up_folder 컬럼 : 업로드파일의 저장 날짜폴더이름.   운영체제별 경로구분자  유형1) /2023/04/06/   유형2)\2023\04\06\ 역슬래쉬
+
+
 
 
 -- 1차카테고리 : TOP (코드 : 1)
@@ -844,4 +847,6 @@ FROM (
             FROM BOARD_TBL b
     )
 WHERE RN >=4 AND RN <=6;
+
+
 

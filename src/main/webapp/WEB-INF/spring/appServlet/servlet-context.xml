@@ -27,8 +27,6 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<context:component-scan base-package="com.docmall.controller" />
-	
 	<!-- 파일 업로드 설정 -->
 	<!-- CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver() -->
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -55,5 +53,6 @@
 		<beans:constructor-arg value="C:\\Dev\\upload\\ckeditor\\"></beans:constructor-arg>
 	</beans:bean>
 	
+	<context:component-scan base-package="com.docmall.controller" />
 	
 </beans:beans>

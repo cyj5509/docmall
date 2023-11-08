@@ -70,6 +70,12 @@ desired effect
                     <div class="box box-primary">
                       <div class="box-header with-border">
                         <h3 class="box-title mt-5">Product Edit</h3>
+                        <form id="actionForm" action="" method="get"> <!-- JS에서 자동 입력 -->
+                          <input type="hidden" name="pageNum" id="pageNum" value="${cri.pageNum}" />
+                          <input type="hidden" name="amount" id="amount" value="${cri.amount}" />
+                          <input type="hidden" name="type" id="type" value="${cri.type}" />
+                          <input type="hidden" name="keyword" id="keyword" value="${cri.keyword}" />
+                        </form>
                       </div>
 
                       <!-- form 태그는 글쓰기나 수정 폼에서 사용 -->
@@ -90,6 +96,11 @@ desired effect
                             <div class="col-sm-3">
                               <select class="form-control" id="secondCategory" name="cg_code">
                                 <option>2차 카테고리 선택</option>
+                                <c:forEach items="${second_categoryList}" var="categoryVO">
+                                  <option value="${categoryVO.cg_code}" ${categoryVO.cg_code==productVO.cg_code
+                                    ? 'selected' : '' }>
+                                    ${categoryVO.cg_name}</option>
+                                </c:forEach>
                               </select>
                             </div>
                           </div>
@@ -97,6 +108,7 @@ desired effect
                           <div class="form-group row">
                             <label for="title" class="col-sm-2 col-form-label">상품명</label>
                             <div class="col-sm-4">
+                              <input type="hidden" name="pro_num" value="${productVO.pro_num }">
                               <input type="text" class="form-control" name="pro_name" id="pro_name"
                                 value="${productVO.pro_name}" placeholder="상품명 입력..." />
                             </div>
@@ -125,11 +137,16 @@ desired effect
                             <div class="col-sm-4">
                               <input type="file" class="form-control" name="uploadFile" id="uploadFile"
                                 placeholder="작성자 입력..." />
+                              <!-- 상품 이미지 변경 시 기존 이미지 삭제를 위해 사용됨 -->
+                              <input type="hidden" name="pro_up_folder" value="${productVO.pro_up_folder }">
+                              <input type="hidden" name="pro_img" value="${productVO.pro_img }">
                               <!-- name 속성은 실제로 사용하지 않는다, 즉, ProductVO의 pro_img와는 다른 용도이다. -->
                             </div>
                             <label for="title" class="col-sm-2 col-form-label">미리보기 이미지</label>
                             <div class="col-sm-4">
-                              <img id="img_preview" style="width: 200px; height: 200px" />
+                              <img id="img_preview"
+                                src="/admin/product/imageDisplay?dateFolderName=${productVO.pro_up_folder }&fileName=${productVO.pro_img }"
+                                style="width: 200px; height: 200px" />
                             </div>
                           </div>
 
@@ -166,7 +183,7 @@ desired effect
                           </div>
                           <div class="text-center">
                             <button type="submit" class="btn btn-primary">
-                              상품 등록
+                              상품 수정
                             </button>
                             <button type="reset" class="btn btn-primary">취소</button>
                           </div>

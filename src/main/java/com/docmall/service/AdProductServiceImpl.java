@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.docmall.domain.CategoryVO;
 import com.docmall.domain.ProductVO;
 import com.docmall.dto.Criteria;
 import com.docmall.dto.ProductDTO;
@@ -70,9 +69,14 @@ public class AdProductServiceImpl implements AdProductService {
 	}
 
 	@Override
-	public CategoryVO get(Integer cg_code) {
-		
-		return adProductMapper.get(cg_code);
+	public void pro_edit(ProductVO vo) {
+
+		adProductMapper.pro_edit_ok(vo);
 	}
 
+	@Override
+	public void pro_delete(Integer pro_num) {
+		
+		adProductMapper.pro_delete(pro_num);
+	}
 }

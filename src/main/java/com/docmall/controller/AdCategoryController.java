@@ -42,8 +42,5 @@ public class AdCategoryController {
 		// list 객체를 JSON으로 변환하는 라이브러리로 Jackson Databind 필요(pom.xml 참고) 
 		
 		return entity; // 
-	}
-	
-
-	
+	}	
 }

@@ -35,19 +35,18 @@ public class FileUtils {
 
 	// 서버에 파일 업로드 기능 구현 및 실제 업로드한 파일명 반환
 	/*
-	 * < 매개 변수의 의미 >
-	 * 
-	 * 1. String uploadFolder: 서버 측의 업로드될 폴더 ->
-	 * C:\\Dev\\upload\\product(servlet-context.xml 참고) 2. String dateFolder: 이미지
-	 * 파일을 저장할 날짜 폴더명 -> 2023\11\03 3. MultipartFile uploadFile: 업로드될 파일을 참조하는 객체
-	 */
+	< 매개 변수의 의미 >
+	1. String uploadFolder: 서버 측의 업로드될 폴더 -> C:\\Dev\\upload\\product(servlet-context.xml 참고)
+	2. String dateFolder: 이미지 파일을 저장할 날짜 폴더명 -> 2023\11\03 
+	3. MultipartFile uploadFile: 업로드될 파일을 참조하는 객체
+	*/
 	public static String uploadFile(String uploadFolder, String dateFolder, MultipartFile uploadFile) {
 
 		String realUploadFileName = ""; // 실제 업로드한 파일 이름(파일 이름 중복 방지)
 
 		// File 클래스: 파일과 폴더 관련 작업하는 기능
-		File file = new File(uploadFolder, dateFolder); // 예) "C:/Dev/devtools/upload/" -> //
-														// "C:/Dev/devtools/upload/2023/11/02"
+		// 예) "C:/Dev/devtools/upload/" -> "C:/Dev/devtools/upload/2023/11/02"
+		File file = new File(uploadFolder, dateFolder); 
 
 		// 폴더 경로가 없으면 폴더명을 생성함
 		if (file.exists() == false) {
@@ -107,11 +106,11 @@ public class FileUtils {
 		return isImageType;
 	}
 
-	// 프로젝트 외부폴더에서 관리되고 있는 상품이미지를 브라우저의 <img src="매핑주소"> 이미지태그로 부터 요청이 들어왔을 때 바이트배열로
-	// 보내는 주는 작업.
+	// 프로젝트 외부폴더에서 관리되고 있는 상품이미지를 브라우저의 <img src="매핑주소">
+	// 이미지 태그로부터 요청이 들어왔을 때 바이트 배열로 보내주는 작업.
 	// String uploadPath : 업로드 폴더경로
 	// String fileName : 날짜폴더경로를 포함한 파일명.(db)
-	// ResponseEntity 클래스 - 1)헤더(header) 2)바디(body)-데이타 3)상태코드
+	// ResponseEntity 클래스: 1) 헤더(header) / 2)바디(body) ─ 데이터 / 3) 상태코드
 	public static ResponseEntity<byte[]> getFile(String uploadPath, String fileName) throws Exception {
 
 		ResponseEntity<byte[]> entity = null;
@@ -123,7 +122,7 @@ public class FileUtils {
 			return entity; // null 로 리턴.
 		}
 
-		// 1)Header
+		// 1) Header
 		// Files.probeContentType(file.toPath()) : image/jpeg
 		// file : 716a5e3e-9e52-45ba-a512-6509595437fa_pineapple.jpg
 		HttpHeaders headers = new HttpHeaders();
@@ -132,5 +131,19 @@ public class FileUtils {
 		entity = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
 
 		return entity;
+	}
+	
+	// 파일 삭제
+	// String uploadPath: 업로드 폴더명 -> servlet-context.xml의 uploadPath bean 정보 사용
+	// String folderName: 날짜 폴더명
+	// String fileName: 파일명
+	public static void deleteFile(String uploadPath, String folderName, String fileName) {
+		
+		// 1) 원본 이미지 삭제
+		// File.separatorChar: 배포된 서버의 운영체제에서 사용하는 파일의 경로 구분자를 반환 -> 예) 윈도우즈: \, 리눅스: /
+		new File((uploadPath + folderName + "\\" + fileName).replace('\\', File.separatorChar)).delete(); // 작은 따옴표('')는 char를 표현(Escape Sequence)
+		
+		// 2) 썸네일 이미지 삭제
+		new File((uploadPath + folderName + "\\" + "s_" + fileName).replace('\\', File.separatorChar)).delete(); // 작은 따옴표('')는 char를 표현(Escape Sequence)
 	}
 }

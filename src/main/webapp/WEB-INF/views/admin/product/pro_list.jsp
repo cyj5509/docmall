@@ -105,7 +105,7 @@ desired effect
                                 <td>
                                   <a class="move" href="#" data-bno="${productVO.pro_num }"><img
                                       src="/admin/product/imageDisplay?dateFolderName=${productVO.pro_up_folder }&fileName=s_${productVO.pro_img }"></a>
-                                  <a class="move" href="#" data-bno="${productVO.pro_num}">${productVO.pro_name}</a>
+                                  <a class="move pro_name" href="#" data-bno="${productVO.pro_num}">${productVO.pro_name}</a>
                                 </td> <!-- 클래스명 move는 제목과 관련 -->
                                 <td><input type="text" name="pro_price" value="${productVO.pro_price}"></td>
                                 <td>
@@ -118,8 +118,8 @@ desired effect
                                   </select>
                                 </td>
                                 <!-- name이나 class는 두 번 이상 사용 가능 -->
-                                <td><button type="button" class="btn btn-primary" name="btn_edit">수정</button></td>
-                                <td><button type="button" class="btn btn-danger btn_del">삭제</button></td>
+                                <td><button type="button" class="btn btn-primary" name="btn_pro_edit">수정</button></td>
+                                <td><button type="button" class="btn btn-danger btn_pro_del">삭제</button></td>
                               </tr>
                             </c:forEach>
                           </tbody>
@@ -403,7 +403,7 @@ desired effect
             })
 
             // 상품수정
-            $("button[name='btn_edit']").on("click", function () {
+            $("button[name='btn_pro_edit']").on("click", function () {
 
               // 수정 상품코드
               // let 수정상품코드 = $(this).parent().parent().find("상품코드를 참조하는 태그").val()
@@ -420,6 +420,27 @@ desired effect
 
               actionForm.attr("method", "get");
               actionForm.attr("action", "/admin/product/pro_edit");
+              actionForm.submit();
+            });
+
+            // 상품 삭제, 화살표 함수 사용 시 상품코드 값을 읽을 수 없다.
+            $(".btn_pro_del").on("click", function() {
+
+              // <a class="move pro_name" href="#" data-bno="${productVO.pro_num}">${productVO.pro_name}</a>
+              // text(): 입력양식 태그가 아닌 일반 태그의 값을 변경하거나 읽을 때 사용
+              let pro_name = $(this).parent().parent().find(".pro_name").text();
+              if(!confirm(pro_name + " 상품을 삭제하겠습니까?")) return;
+
+              // val()은 input, select, textarea 태그의 값을 변경하거나 읽을 때 사용
+              let pro_num = $(this).parent().parent().find("input[name='check']").val(); 
+
+              console.log("상품코드", pro_num)
+
+              // <input type="hidden" name="pro_num" id="pro_num" value="값" />
+              actionForm.append('<input type="hidden" name="pro_num" id="pro_num" value="' + pro_num + '" />');
+
+              actionForm.attr("method", "post");
+              actionForm.attr("action", "/admin/product/pro_delete");
               actionForm.submit();
             });
 

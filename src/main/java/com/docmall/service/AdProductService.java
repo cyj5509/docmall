@@ -8,6 +8,7 @@ import com.docmall.dto.Criteria;
 
 public interface AdProductService {
 
+	// 상품 등록
 	void pro_insert(ProductVO vo);
 
 	List<ProductVO> pro_list(Criteria cri);
@@ -22,7 +23,9 @@ public interface AdProductService {
 	
 	ProductVO pro_edit(Integer pro_num);
 	
-	// 상품 수정에서 1차와 2차 카테고리를 보여주는 작업
-	CategoryVO get(Integer cg_code);
-		
+	// 상품 수정
+	void pro_edit(ProductVO vo); // 꼭 pro_edit_ok로 이름을 변경할 필요 없음
+
+	// 상품 삭제
+	void pro_delete(Integer pro_num);
 }
