@@ -2,7 +2,6 @@ package com.docmall.service;
 
 import java.util.List;
 
-import com.docmall.domain.CategoryVO;
 import com.docmall.domain.ProductVO;
 import com.docmall.dto.Criteria;
 

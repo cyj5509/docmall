@@ -173,6 +173,7 @@ public class AdProductController {
 	}
 
 	// 상품 리스트: 목록과 페이징
+	// 테이블의 전체 데이터를 가져옴
 	@GetMapping("/pro_list")
 	public void pro_list(Criteria cri, Model model) throws Exception {
 
