@@ -96,7 +96,7 @@ desired effect
                               <th style="width: 10%">수정</th>
                               <th style="width: 10%">삭제</th>
                             </tr>
-                            <!-- BoardController에서 작성한부이름과 동일한 이름을 items로 작성 -->
+                            <!-- BoardController에서 작성한 부이름과 동일한 이름을 items로 작성 -->
                             <!-- 목록이 출력되는 부분 -->
                             <c:forEach items="${pro_list}" var="productVO">
                               <tr>
