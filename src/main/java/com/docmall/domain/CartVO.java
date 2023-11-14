@@ -21,7 +21,7 @@ CREATE TABLE CART_TBL(
 );
 */
 	
-	private Long cart_code;
+	private Long cart_code; // 시퀀스를 통해 처리. 그 외 나머지는 Ajax 처리(pro_list.jsp 참고)
 	
 	private Integer pro_num; // 상품코드
 	private String mbsp_id; // 세션 활용
