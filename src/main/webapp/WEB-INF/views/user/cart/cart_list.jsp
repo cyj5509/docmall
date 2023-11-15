@@ -72,7 +72,9 @@
 										<td><span id="unitDiscount">${cartDTO.pro_discount * 1/100}</span></td>
 										<td><span class="unitTotalPrice" id="unitTotalPrice">${(cartDTO.pro_price - (cartDTO.pro_price *
 												(cartDTO.pro_discount * 1/100))) * cartDTO.cart_amount}</span></td>
-										<td><button type="button" class="btn btn-danger">삭제</button></td>
+												<!-- button 태그 자체에 상품코드를 숨겨두거나 input 태그에 숨겨두는 등 방식은 다양함 -->
+												<!-- <td><input type="checkbox" name="cart_code" value="${cartDTO.cart_code}"></td>-->
+										<td><button type="button" name="btn_cart_del" class="btn btn-danger">삭제</button></td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -87,7 +89,6 @@
 								</tr>
 							</tfoot>
 						</table>
-
 						<%@include file="/WEB-INF/views/comm/footer.jsp" %>
 					</div> <!-- container 닫는 태그 -->
 
@@ -129,17 +130,50 @@
 												unitTotalPrice.text((unitPrice - (unitPrice * unitDiscount)) * cart_amount); // text(): 입력 양식이 있는 경우(?)
 
 												// 전체 주문금액
-												let sumPrice = 0;
-												$(".unitTotalPrice").each(function () {
-													sumPrice += Number($(this).text());
-												});
-												$("#cart_total_price").text(sumPrice);
+												fn_cart_sum_price();
 											}
 										}
 									})
 								});
 
-							});
+								// 장바구니 삭제
+								$("button[name='btn_cart_del']").on("click", function() {
+
+									if(!confirm("장바구니 상품을 삭제하겠습니까?")) return;
+									
+									let cur_btn_change = $(this); // 선택된 버튼 태그의 위치를 미리 참조
+									let cart_code = $(this).parent().parent().find("input[name='cart_code']").val();
+									
+									// console.log("장바구니 코드", cart_code);
+
+									$.ajax({
+										url: '/user/cart/cart_list_del',
+										type: 'post',
+										data: {cart_code: cart_code},
+										dataType: 'text',
+										success: function(result) {
+											if(result == 'success') {
+												alert("장바구니 상품이 삭제되었습니다.");
+
+												cur_btn_change.parent().parent().remove(); // 삭제된 장바구니 데이터행 제거
+
+												// 전체 주문 금액
+												fn_cart_sum_price()
+											}
+										}
+									});
+								});
+								
+							}); // jQuery ready-end
+
+							// 장바구니 전체 주문 금액: 수량 변경, 삭제 등 중복되는 코드라서 바깥에 작
+							function fn_cart_sum_price() {
+								let sumPrice = 0;
+										$(".unitTotalPrice").each(function () {
+											sumPrice += Number($(this).text());
+										});
+										$("#cart_total_price").text(sumPrice);
+							}
 						</script>
 			</body>
 

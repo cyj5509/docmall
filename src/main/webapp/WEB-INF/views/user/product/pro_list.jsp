@@ -144,7 +144,7 @@
 										$("button[name='btn_cart_add']").on("click", function () {
 											// console.log("장바구니");
 											$.ajax({
-												url: '/cart/cart_add', // url: '장바구니 추가 주소', 
+												url: '/user/cart/cart_add', // url: '장바구니 추가 주소', 
 												type: 'post',
 												// $(this).data("pro_num"): 버튼을 눌렀을 때 동작하는 장바구니 상품코드
 												data: { pro_num: $(this).data("pro_num"), cart_amount: 1 }, // mbsp_id는 스프링에서 자체 처리

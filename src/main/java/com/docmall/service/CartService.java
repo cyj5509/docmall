@@ -13,6 +13,10 @@ public interface CartService {
 	// List<CartDTOList>: CartVO에서 여러 개의 데이터를 가져올 경우
 	List<CartDTOList> cart_list(String mbsp_id); // 장바구니 목록 관련 메서드
 	
+	// 장바구니 수량 변경 관련 메서드
 	void cart_amount_change(Long cart_code, int cart_amount);
+
+	// 장바구니 목록에서 개별 삭제 관련 메서드
+	void cart_list_del(Long cart_code);
 
 }
