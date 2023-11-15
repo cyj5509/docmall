@@ -74,7 +74,10 @@
 												(cartDTO.pro_discount * 1/100))) * cartDTO.cart_amount}</span></td>
 												<!-- button 태그 자체에 상품코드를 숨겨두거나 input 태그에 숨겨두는 등 방식은 다양함 -->
 												<!-- <td><input type="checkbox" name="cart_code" value="${cartDTO.cart_code}"></td>-->
-										<td><button type="button" name="btn_cart_del" class="btn btn-danger">삭제</button></td>
+										<td>
+											<button type="button" name="btn_ajax_cart_del" class="btn btn-danger">삭제 1(AJAX용)</button>
+											<button type="button" name="btn_nonAjax_cart_del" class="btn btn-danger">삭제 2(Non-AJAX용)</button>
+										</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -85,6 +88,13 @@
 								<tr>
 									<td colspan="8" style="text-align: right;">
 										최종 결제금액: <span id="cart_total_price">${cart_total_price}</span>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="8" style="text-align: center;">
+										<button type="button" id="btn_product" class="btn btn-primary">쇼핑 계속하기</button>
+										<button type="button" id="btn_cart_empty" class="btn btn-primary">장바구니 비우기</button>
+										<button type="button" id="btn_order" class="btn btn-primary">주문하기</button>
 									</td>
 								</tr>
 							</tfoot>
@@ -133,11 +143,11 @@
 												fn_cart_sum_price();
 											}
 										}
-									})
+									});
 								});
 
-								// 장바구니 삭제
-								$("button[name='btn_cart_del']").on("click", function() {
+								// 장바구니 삭제(AJAX 사용)
+								$("button[name='btn_ajax_cart_del']").on("click", function() {
 
 									if(!confirm("장바구니 상품을 삭제하겠습니까?")) return;
 									
@@ -163,7 +173,23 @@
 										}
 									});
 								});
+
+								// 장바구니 삭제(Non-AJAX용)
+								$("button[name='btn_nonAjax_cart_del']").on("click", function() {
+
+									if(!confirm("장바구니 상품을 삭제하겠습니까?")) return;
+
+									let cart_code = $(this).parent().parent().find("input[name='cart_code']").val();
+									// location.href = "장바구니 삭제 주소";는 GET 방식
+									location.href = "/user/cart/cart_list_del?cart_code=" + cart_code;
+								});
 								
+								// 주문하가
+								$("button#btn_order").on("click", function() {
+									// location.href = "주문하기 페이지 주소"
+									location.href = "/user/order/order_info"
+								});
+
 							}); // jQuery ready-end
 
 							// 장바구니 전체 주문 금액: 수량 변경, 삭제 등 중복되는 코드라서 바깥에 작

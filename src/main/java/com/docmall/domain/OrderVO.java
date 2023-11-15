@@ -1,0 +1,41 @@
+package com.docmall.domain;
+
+import java.util.Date;
+
+import lombok.Data;
+
+/*
+CREATE TABLE order_tbl(
+        ord_code            NUMBER                  PRIMARY KEY,
+        mbsp_id             VARCHAR2(15)            NOT NULL,
+        ord_name            VARCHAR2(30)            NOT NULL,
+        ord_zipcode         CHAR(5)                 NOT NULL,
+        ord_addr_basic      VARCHAR2(50)            NOT NULL,
+        ord_addr_detail     VARCHAR2(50)            NOT NULL,
+        ord_tel             VARCHAR2(20)            NOT NULL,
+        ord_price           NUMBER                  NOT NULL,  
+        ord_regdate         DATE DEFAULT sysdate    NOT NULL,
+        ord_status          VARCHAR2(20)            NOT NULL,
+        payment_status      VARCHAR2(20)            NOT NULL,
+        FOREIGN KEY(mbsp_id) REFERENCES mbsp_tbl(mbsp_id)
+);
+*/
+
+@Data
+public class OrderVO {
+
+	private Long ord_code; // 주문 번호
+	private String mbsp_id; // 회원 아이디
+	private String ord_name; // 주문자명
+	private String ord_zipcode; // 우편번호
+	private String ord_addr_basic; // 기본 주소
+	private String ord_addr_detail; // 상세 주소
+	private String ord_tel; // 전화번호
+	private int ord_price; //  총 주문 금액
+	private Date ord_regdate; // 주문 일자
+	private String ord_status; // 주문 상태
+	private String payment_status; // 결제 상태
+	
+	
+	
+}

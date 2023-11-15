@@ -134,7 +134,6 @@
 				</div>
 
 				<%@include file="/WEB-INF/views/comm/footer.jsp" %>
-
 			</div>
 
 			<!-- iOS에서는 position:fixed 버그가 있음, 적용하는 사이트에 맞게 position:absolute 등을 이용하여 top,left값 조정 필요 -->

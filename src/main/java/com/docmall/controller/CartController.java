@@ -89,6 +89,8 @@ public class CartController {
 			CartDTOList vo = cart_list.get(i);
 			
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
+			// vo.setPro_discount(vo.getPro_discount() * 1/100);
+			
 			cart_total_price += (double) (vo.getPro_price() - (vo.getPro_price() * vo.getPro_discount() * 1/100)) * vo.getCart_amount();
 		}
 		
@@ -117,7 +119,7 @@ public class CartController {
 		return entity;
 	}
 	
-	// 장바구니 목록에서 개별 삭제
+	// 장바구니 목록에서 개별 삭제(AJAX용)
 	@PostMapping("/cart_list_del")
 	public ResponseEntity<String> cart_list_del(Long cart_code) throws Exception {
 		ResponseEntity<String> entity = null;
@@ -126,5 +128,14 @@ public class CartController {
 		
 		entity = new ResponseEntity<String>("success", HttpStatus.OK);
 		return entity;
+	}
+	
+	// 장바구니 목록에서 개별 삭제(Non-AJAX용)
+	@GetMapping("/cart_list_del")
+	public String cart_list_del2(Long cart_code) throws Exception {
+	
+		cartService.cart_list_del(cart_code);
+		
+		return "redirect:/user/cart/cart_list";
 	}
 }
