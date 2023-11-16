@@ -19,4 +19,6 @@ public interface CartService {
 	// 장바구니 목록에서 개별 삭제 관련 메서드
 	void cart_list_del(Long cart_code);
 
+	// 장바구니 목록에서 선택 삭제 관련 메서드
+	void cart_sel_delete(List<Long> cart_code_arr);
 }

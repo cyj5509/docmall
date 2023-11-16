@@ -24,4 +24,7 @@ public interface CartMapper {
 	
 	// 장바구니 목록에서 개별 삭제 관련 메서드
 	void cart_list_del(Long cart_code);
+	
+	//장바구니 선택삭제. 파라미터 List컬렉션 사용.
+	void cart_sel_delete(List<Long> cart_code_arr);
 }

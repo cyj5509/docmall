@@ -15,8 +15,8 @@ CREATE TABLE ordetail_tbl(
 @Data
 public class OrderDetailVO {
 
-	private Long ord_code;
-	private Integer pro_num;
-	private int dt_amount;
-	private int dt_price;
+	private Long ord_code; // 주문번호
+	private Integer pro_num; // 상품코드
+	private int dt_amount; // 상품 개수
+	private int dt_price; // 상품 가격
 }

@@ -43,6 +43,12 @@ public class CartServiceImpl implements CartService {
 		cartMapper.cart_list_del(cart_code);
 		
 	}
+	
+	@Override
+	public void cart_sel_delete(List<Long> cart_code_arr) {
+
+		cartMapper.cart_sel_delete(cart_code_arr);
+	}
 
 
 

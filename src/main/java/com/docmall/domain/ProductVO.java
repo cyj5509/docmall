@@ -30,7 +30,7 @@ CREATE TABLE PRODUCT_TBL(
 	
 	// pro_num, pro_up_folder, pro_img, pro_date, pro_updatedate는 직접 입력 받지 않음
 	
-		private Integer pro_num; // 시퀀스 생성(사용자로부터 직접 입력받지 않음)
+		private Integer pro_num; // 상품코드: 시퀀스 생성(사용자로부터 직접 입력받지 않음)
 		private Integer cg_code; // cg_code: 2차 카테고리 코드
 		private String pro_name;
 		private int pro_price;

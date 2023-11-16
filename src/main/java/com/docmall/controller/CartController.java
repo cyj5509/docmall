@@ -12,12 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 // import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.docmall.domain.CartVO;
 import com.docmall.domain.MemberVO;
-import com.docmall.domain.ProductVO;
 import com.docmall.dto.CartDTOList;
 import com.docmall.service.CartService;
 import com.docmall.util.FileUtils;
@@ -137,5 +137,26 @@ public class CartController {
 		cartService.cart_list_del(cart_code);
 		
 		return "redirect:/user/cart/cart_list";
+	}
+	
+	//장바구니 선택삭제
+	@PostMapping("/cart_sel_delete")
+	public ResponseEntity<String> cart_sel_delete(@RequestParam("cart_code_arr[]") List<Long> cart_code_arr) {
+		
+		ResponseEntity<String> entity = null;
+		
+		//방법1. 하나씩 반복적으로 삭제.
+		/*
+		for(int i=0; i<cart_code_arr.size(); i++) {
+			cartService.cart_delete(cart_code_arr.get(i));
+		}
+		*/
+		
+		//방법2. mybatis foreach : https://java119.tistory.com/85
+		cartService.cart_sel_delete(cart_code_arr);
+		
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		
+		return entity;
 	}
 }
