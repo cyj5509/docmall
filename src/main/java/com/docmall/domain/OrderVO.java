@@ -24,15 +24,19 @@ CREATE TABLE order_tbl(
 @Data
 public class OrderVO {
 
-	private Long ord_code; // 주문 번호
-	private String mbsp_id; // 회원 아이디
+	private Long ord_code; // 주문 번호: DB의 시퀀스 사용
+	private String mbsp_id; // 회원 아이디: 인증 세션에서 처리
+	
+	// 주문정보 페이지 전송에서 받음
 	private String ord_name; // 주문자명
 	private String ord_zipcode; // 우편번호
 	private String ord_addr_basic; // 기본 주소
 	private String ord_addr_detail; // 상세 주소
 	private String ord_tel; // 전화번호
 	private int ord_price; //  총 주문 금액
-	private Date ord_regdate; // 주문 일자
+	
+	private Date ord_regdate; // 주문 일자: 내부적으로 처리(sysdate)
+	
 	private String ord_status; // 주문 상태
 	private String payment_status; // 결제 상태
 	
