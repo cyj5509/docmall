@@ -99,15 +99,21 @@ public class OrderController {
 		// int com.docmall.service.OrderService.getOrderSeq()
 		Long ord_code = (long) orderService.getOrderSeq();
 		o_vo.setOrd_code(ord_code); // 주문번호 저장		
-		
-		log.info("결제방법: " + paymethod);
-		log.info("주문정보: " + o_vo);
 	
 		// 1) 주문 테이블 저장 작업: ord_status, payment_status 데이터 준비할 것(우선은 누락시킴)
 		// 2) 주문 상세 테이블 저장 작업
 		
+		p_vo.setOrd_code(ord_code);
+		p_vo.setMbsp_id(mbsp_id);
+		p_vo.setPay_method("카카오페이");
+		p_vo.setPay_tot_price(totalprice);
+		
 		o_vo.setOrd_status("주문완료");
 		o_vo.setPayment_status("결제완료");
+		
+		log.info("결제방법: " + paymethod);
+		log.info("주문정보: " + o_vo);
+		log.info("결제정보: " + p_vo);		
 		
 		List<CartDTOList> cart_list = cartService.cart_list(mbsp_id);
 		String itemName = cart_list.get(0).getPro_name() + "외 " + String.valueOf(cart_list.size() - 1) + "건";
@@ -187,7 +193,7 @@ public class OrderController {
 		log.info("주문정보: " + o_vo);
 		log.info("결제정보: " + p_vo);
 		
-		// orderService.order_insert(o_vo, p_vo); // 주문, 주문상세 정보 저장, 장바구니 삭제, 결제 정보 저장
+		orderService.order_insert(o_vo, p_vo); // 주문, 주문상세 정보 저장, 장바구니 삭제, 결제 정보 저장
 		
 		entity = new ResponseEntity<>("success", HttpStatus.OK);
 		

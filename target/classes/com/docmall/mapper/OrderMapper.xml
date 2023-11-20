@@ -26,7 +26,8 @@
 		#{ord_tel}, 
 		#{ord_price}, 
 		sysdate, 
-		#{ord_status}, #{payment_status}
+		#{ord_status},
+		#{payment_status}
 		)
 </insert>
 
@@ -51,18 +52,16 @@
 <insert id="payment_insert" parameterType="com.docmall.domain.PaymentVO">
 	INSERT INTO
 		payment
-			(pay_code, ord_code, mbsp_ip, pay_method, pay_date, pay_tot_price, pay_nobank_price, pay_nobank_user, pay_nobank, pay_memo)
-		values (
-			SEQ_PAYMENT_CODE.NEXTVAL,
-			#{ord_code}, 
-			#{mbsp_ip}, 
-			#{pay_method}, 
-			sysdate, 
-			#{pay_tot_price}, 
-			#{pay_nobank_price}, 
-			#{pay_nobank_user}, 
-			#{pay_nobank_user}, 
-			#{pay_memo}
+			(pay_code, ord_code, mbsp_id, pay_method, pay_date, pay_tot_price
+			<if test="pay_nobank_price != null and pay_nobank_price != ''"> <!-- 무통장 입금인 경우 사용, 카카오페이인 경우 미사용 -->
+			, pay_nobank_price, pay_nobank_user, pay_nobank, pay_memo, pay_bankaccount
+			</if>
+			)
+		values 
+			(SEQ_PAYMENT_CODE.NEXTVAL, #{ord_code}, #{mbsp_id}, #{pay_method}, sysdate, #{pay_tot_price} 
+			<if test="pay_nobank_price != null and pay_nobank_price != ''"> <!-- 무통장 입금인 경우 사용, 카카오페이인 경우 미사용 -->
+			, #{pay_nobank_price}, #{pay_nobank_user}, #{pay_nobank}, #{pay_memo}, #{pay_bankaccount}
+			</if>
 			)
 </insert>
 

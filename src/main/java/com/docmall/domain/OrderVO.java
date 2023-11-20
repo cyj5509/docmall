@@ -6,17 +6,17 @@ import lombok.Data;
 
 /*
 CREATE TABLE order_tbl(
-        ord_code            NUMBER                  PRIMARY KEY,
-        mbsp_id             VARCHAR2(15)            NOT NULL,
-        ord_name            VARCHAR2(30)            NOT NULL,
-        ord_zipcode         CHAR(5)                 NOT NULL,
-        ord_addr_basic      VARCHAR2(50)            NOT NULL,
-        ord_addr_detail     VARCHAR2(50)            NOT NULL,
-        ord_tel             VARCHAR2(20)            NOT NULL,
-        ord_price           NUMBER                  NOT NULL,  
-        ord_regdate         DATE DEFAULT sysdate    NOT NULL,
-        ord_status          VARCHAR2(20)            NOT NULL,
-        payment_status      VARCHAR2(20)            NOT NULL,
+        ord_code             NUMBER                  PRIMARY KEY,
+        mbsp_id              VARCHAR2(15)            NOT NULL,
+        ord_name             VARCHAR2(30)            NOT NULL,
+        ord_zipcode          CHAR(5)                 NOT NULL,
+        ord_addr_basic       VARCHAR2(50)            NOT NULL,
+        ord_addr_detail      VARCHAR2(50)            NOT NULL,
+        ord_tel              VARCHAR2(20)            NOT NULL,
+        ord_price            NUMBER                  NOT NULL,  
+        ord_regdate          DATE DEFAULT sysdate    NOT NULL,
+        ord_status           VARCHAR2(20)            NOT NULL,
+        payment_status       VARCHAR2(20)            NOT NULL,
         FOREIGN KEY(mbsp_id) REFERENCES mbsp_tbl(mbsp_id)
 );
 */
@@ -39,7 +39,5 @@ public class OrderVO {
 	
 	private String ord_status; // 주문 상태
 	private String payment_status; // 결제 상태
-	
-	
 	
 }

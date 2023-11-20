@@ -84,7 +84,4 @@ public class AdminController {
 	public void admin_menu() {
 		
 	}
-	
-	
-	
 }
