@@ -48,6 +48,24 @@
 		mbsp_id = #{mbsp_id}
 </delete>
 
+<insert id="payment_insert" parameterType="com.docmall.domain.PaymentVO">
+	INSERT INTO
+		payment
+			(pay_code, ord_code, mbsp_ip, pay_method, pay_date, pay_tot_price, pay_nobank_price, pay_nobank_user, pay_nobank, pay_memo)
+		values (
+			SEQ_PAYMENT_CODE.NEXTVAL,
+			#{ord_code}, 
+			#{mbsp_ip}, 
+			#{pay_method}, 
+			sysdate, 
+			#{pay_tot_price}, 
+			#{pay_nobank_price}, 
+			#{pay_nobank_user}, 
+			#{pay_nobank_user}, 
+			#{pay_memo}
+			)
+</insert>
+
 </mapper>
 
   

@@ -50,7 +50,6 @@
 									<th scope="col">상품명</th>
 									<th scope="col">판매가</th>
 									<th scope="col">수량</th>
-									<th scope="col">할인</th>
 									<th scope="col">합계</th>
 									<th scope="col">비고</th>
 								</tr>
@@ -69,9 +68,7 @@
 											<input type="number" name="cart_amount" value="${cartDTO.cart_amount}" style="width: 45px;">
 											<button type="button" name="btn_cart_amount_change" class="btn btn-info">변경</button>
 										</td>
-										<td><span id="unitDiscount">${cartDTO.pro_discount * 1/100}</span></td>
-										<td><span class="unitTotalPrice" id="unitTotalPrice">${(cartDTO.pro_price - (cartDTO.pro_price *
-												(cartDTO.pro_discount * 1/100))) * cartDTO.cart_amount}</span></td>
+										<td><span class="unitTotalPrice" id="unitTotalPrice">${cartDTO.pro_price * cartDTO.cart_amount}</span></td>
 												<!-- button 태그 자체에 상품코드를 숨겨두거나 input 태그에 숨겨두는 등 방식은 다양함 -->
 												<!-- <td><input type="checkbox" name="cart_code" value="${cartDTO.cart_code}"></td>-->
 										<td>

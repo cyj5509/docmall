@@ -71,7 +71,7 @@ public class CartController {
 		// [참고] UserProductController의 @GetMapping("/pro_list")
 		List<CartDTOList> cart_list = cartService.cart_list(mbsp_id);
 		
-		double cart_total_price = 0;
+		int cart_total_price = 0;
 
 		// 날짜 폴더의 '\'를 '/'로 바꾸는 작업(이유: '\'로 되어 있는 정보가 스프링으로 보내는 요청 데이터에 사용되면 에러 발생)
 		// 스프링에서 처리 안하면 자바스크립트에서 처리할 수도 있다.
@@ -91,7 +91,7 @@ public class CartController {
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
 			// vo.setPro_discount(vo.getPro_discount() * 1/100);
 			
-			cart_total_price += (double) (vo.getPro_price() - (vo.getPro_price() * vo.getPro_discount() * 1/100)) * vo.getCart_amount();
+			cart_total_price +=  (vo.getPro_price() * vo.getCart_amount());
 		}
 		
 		model.addAttribute("cart_list", cart_list);

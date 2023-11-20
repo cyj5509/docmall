@@ -1,7 +1,7 @@
 /*
 */
 
-
+commit;
 DROP TABLE MBSP_TBL;
 
 -- 한글 데이터 크기?
@@ -437,15 +437,16 @@ create sequence seq_cart_code;
 
 -- 장바구니에 로그인 사용자가 상품을 추가시, 존재 할경우는 수량변경, 존재 하지않는 경우 장바구니 추가(담기)
 
-merge into cart_tbl
-using dual
-on (MBSP_ID = 'id값' and PRO_NUM = '상품코드')
-when matched then
-    update
-        set CART_AMOUNT = CART_AMOUNT + 수량
-when not matched then
-    insert(cart_code, pro_num, mbsp_id, cart_amount)
-    values(seq_cart_code.nextval,#{pro_num},#{mbsp_id},#{cart_amount})
+-- [Oracle] 오라클 MERGE INTO 사용법 & 노하우 정리: https://gent.tistory.com/406
+MERGE INTO cart_tbl
+USING dual -- 다른 테이블이 필요하지 않을 경우
+ON (mbsp_id = 'id값' AND pro_num = '상품코드')
+WHEN MATCHED THEN
+    UPDATE
+        SET cart_amount = cart_amount + 수량
+WHEN NOT MATCHED THEN
+    INSERT(cart_code, pro_num, mbsp_id, cart_amount)
+    VALUES(seq_cart_code.NEXTVAL,#{pro_num},#{mbsp_id},#{cart_amount})
 
 
 
@@ -463,7 +464,7 @@ SELECT * FROM CART_TBL WHERE MBSP_ID = ?;
 */
 MERGE
     INTO CART_TBL C
-USING DUAL
+USING DUAL -- 다른 테이블이 필요하지 않을 경우
     ON (C.MBSP_ID = ?) AND (C.PRO_NUM = ?)
  WHEN MATCHED THEN
     UPDATE
@@ -496,8 +497,15 @@ COMMIT;
   - 2)장바구니 사용 안하고, 바로구매.
  
 */
--- 장바구니 리스트 조회
-
+-- 장바구니 리스트 조회 ─ ANSI 조인(표준 조인)
+SELECT
+  C.CART_CODE, C.PRO_NUM, C.CART_AMOUNT, P.PRO_NAME, P.PRO_PRICE, P.PRO_UP_FOLDER, P.PRO_IMG, P.PRO_DISCOUNT 
+FROM 
+  PRODUCT_TBL P 
+    INNER JOIN CART_TBL C 
+    ON P.PRO_NUM = C.PRO_NUM
+WHERE
+  C.MBSP_ID = 'user01';
 
 
 
@@ -544,17 +552,19 @@ DELETE FROM cart_tbl WHERE mbsp_id = 'user01';
 */
 DROP TABLE ORDER_TBL;
 --5.주문내용 테이블
-CREATE TABLE ORDER_TBL(
-        ORD_CODE            NUMBER                  PRIMARY KEY,
-        MBSP_ID             VARCHAR2(15)            NOT NULL,
-        ORD_NAME            VARCHAR2(30)            NOT NULL,
-        ORD_ADDR_NUM        CHAR(5)                 NOT NULL,
-        ORD_ADDR_BASIC      VARCHAR2(50)            NOT NULL,
-        ORD_ADDR_DETAIL     VARCHAR2(50)            NOT NULL,
-        ORD_TEL             VARCHAR2(20)            NOT NULL,
-        ORD_PRICE           NUMBER                  NOT NULL,  -- 총주문금액. 선택
-        ORD_REGDATE         DATE DEFAULT SYSDATE    NOT NULL,
-        FOREIGN KEY(MBSP_ID) REFERENCES MBSP_TBL(MBSP_ID)
+CREATE TABLE order_tbl(
+        ord_code            NUMBER                  PRIMARY KEY,
+        mbsp_id             VARCHAR2(15)            NOT NULL,
+        ord_name            VARCHAR2(30)            NOT NULL,
+        ord_zipcode         CHAR(5)                 NOT NULL,
+        ord_addr_basic      VARCHAR2(50)            NOT NULL,
+        ord_addr_detail     VARCHAR2(50)            NOT NULL,
+        ord_tel             VARCHAR2(20)            NOT NULL,
+        ord_price           NUMBER                  NOT NULL,  -- 총 주문 금액. 선택
+        ord_regdate         DATE DEFAULT sysdate    NOT NULL,
+        ord_status          VARCHAR2(20)            NOT NULL, -- 주문 상태
+        payment_status      VARCHAR2(20)            NOT NULL, -- 결제 상태
+        FOREIGN KEY(mbsp_id) REFERENCES mbsp_tbl(mbsp_id)
 );
 
 
@@ -563,14 +573,32 @@ values
 
 
 DROP TABLE ORDETAIL_TBL;
---6.주문상세 테이블
-CREATE TABLE ORDETAIL_TBL(
-        ORD_CODE        NUMBER      NOT NULL REFERENCES ORDER_TBL(ORD_CODE),
-        PRO_NUM         NUMBER      NOT NULL REFERENCES PRODUCT_TBL(PRO_NUM),
-        DT_AMOUNT       NUMBER      NOT NULL,
-        DT_PRICE        NUMBER      NOT NULL,  -- 역정규화
-        PRIMARY KEY (ORD_CODE ,PRO_NUM) 
+--6.주문상세 테이블: 중복되는 부분이 있어 테이블을 분리하여 작업(데이터베이스 모델링)
+CREATE TABLE ordetail_tbl(
+        ord_code        NUMBER      NOT NULL REFERENCES order_tbl(ord_code),
+        pro_num         NUMBER      NOT NULL REFERENCES product_tbl(pro_num),
+        dt_amount       NUMBER      NOT NULL,
+        dt_price        NUMBER      NOT NULL,  -- 역정규화
+        PRIMARY KEY (ord_code ,pro_num) 
 );
+
+-- 시퀀스 생성: 주문번호 목적으로 사용
+CREATE SEQUENCE SEQ_ORD_CODE;
+
+-- 주문 테이블: ORDER_TBL
+ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status
+
+-- 주문 상세 테이블 참조(장바구니 테이블 참조)
+-- INSERT ~ SELECT 문
+/*
+INSERT 주문 상세 테이블
+SELECT 장바구니 테이블
+*/
+INSERT ORDETAIL_TBL(ord_code, pro_num, dt_amount, dt_price)
+
+SELECT #{ord_code}, c.pro_num, c.cart_amount, p.pro_price 
+FROM CART_TBL C INNER JOIN PRODUCT_TBL P ON C.PRO_NUM = P.PRO_NUM
+WHERE mbsp_id = #{mbsp_id};
 
 insert into ORDETAIL_TBL(ord_code, pro_num, dt_amount, dt_price)
 select c.pro_num, c.cart_amount, p.pro_price
@@ -848,5 +876,23 @@ FROM (
     )
 WHERE RN >=4 AND RN <=6;
 
+-- 결제 테이블(카카오 페이)
+CREATE TABLE PAYMENT (
+  PAY_CODE          NUMBER PRIMARY KEY,        -- 일련번호
+  ORD_CODE          NUMBER NOT NULL,        -- 주문번호
+  MBSP_ID           VARCHAR2(50) NOT NULL,  -- 회원 ID
+  PAY_METHOD        VARCHAR2(50) NOT NULL,  -- 결제방식
+  PAY_DATE          DATE  NULL,             -- 결제일
+  PAY_TOT_PRICE     NUMBER NOT NULL,        -- 결제금액
+  PAY_NOBANK_PRICE  NUMBER NULL,        -- 무통장 입금금액
+  PAY_REST_PRICE    NUMBER NULL,               --미지급금
+  -- PAY_NOBANK_USER   VARCHAR2(50) NULL,    -- 무통장 입금자명
+  PAY_NOBANK        VARCHAR2(50) NULL,            -- 입금은행
+  PAY_MEMO          VARCHAR2(50) NULL,             --메모
+  PAY_BANKACCOUNT   VARCHAR2(50) NULL
+);
 
 
+CREATE SEQUENCE SEQ_PAYMENT_CODE;
+
+pay_code, ord_code, mbsp_ip, pay_method, pay_date, pay_tot_price, pay_nobank_price, pay_nobank_user, pay_nobank, pay_memo

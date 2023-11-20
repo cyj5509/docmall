@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.docmall.domain.MemberVO;
 import com.docmall.domain.OrderVO;
+import com.docmall.domain.PaymentVO;
 import com.docmall.dto.CartDTOList;
 import com.docmall.kakaopay.ApproveResponse;
 import com.docmall.kakaopay.ReadyResponse;
@@ -46,7 +49,7 @@ public class OrderController {
 		// [참고] UserProductController의 @GetMapping("/pro_list")
 		List<CartDTOList> order_info = cartService.cart_list(mbsp_id);
 		
-		double order_price = 0;
+		int order_price = 0;
 
 		// 날짜 폴더의 '\'를 '/'로 바꾸는 작업(이유: '\'로 되어 있는 정보가 스프링으로 보내는 요청 데이터에 사용되면 에러 발생)
 		// 스프링에서 처리 안하면 자바스크립트에서 처리할 수도 있다.
@@ -66,7 +69,7 @@ public class OrderController {
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
 			// vo.setPro_discount(vo.getPro_discount() * 1/100);
 			
-			order_price += (double) (vo.getPro_price() - (vo.getPro_price() * vo.getPro_discount() * 1/100)) * vo.getCart_amount();
+			order_price += (vo.getPro_price() * vo.getCart_amount());
 		}
 		
 		model.addAttribute("order_info", order_info);
@@ -74,9 +77,10 @@ public class OrderController {
 	}
 	
 	// 주문 정보 페이지에서 카카오페이 결제 선택을 진행한 경우: 주문 정보, 주문 상세 정보, 결제 정보가 한꺼번에 들어옴
+	// 결제 선택 ─ 카카오 페이
 	// 1) 결제 준비 요청
 	@GetMapping(value = "/orderPay", produces = "application/json")
-	public @ResponseBody ReadyResponse payReady(String paymethod, OrderVO o_vo, /* OrderDetailVO od_vo, PaymentVO p_vo, */
+	public @ResponseBody ReadyResponse payReady(String paymethod, OrderVO o_vo, /* OrderDetailVO od_vo, */ PaymentVO p_vo, 
 											   int totalprice, HttpSession session) throws Exception {
 		/*
 		   1) 주문정보 구성 
@@ -108,7 +112,7 @@ public class OrderController {
 		List<CartDTOList> cart_list = cartService.cart_list(mbsp_id);
 		String itemName = cart_list.get(0).getPro_name() + "외 " + String.valueOf(cart_list.size() - 1) + "건";
 		
-		orderService.order_insert(o_vo); // 주문, 주문상세 정보 저장, 장바구니 삭제
+		orderService.order_insert(o_vo, p_vo); // 주문, 주문상세 정보 저장, 장바구니 삭제, 결제 정보 저장
 		
 		// 3) Kakao Pay 호출 -> 1) 결제 준비 요청
 		ReadyResponse readyResponse = kakaoPayServiceImpl.payReady(o_vo.getOrd_code(), mbsp_id, itemName, cart_list.size(), totalprice);
@@ -150,5 +154,43 @@ public class OrderController {
 	@GetMapping("/orderCancel")
 	public void orderCancel() {
 		
+	}
+	
+	// 결제선택 ─ 무통장 입금
+	@GetMapping("/nobank")
+	public ResponseEntity<String> nobank(String paymethod, OrderVO o_vo, /* OrderDetailVO od_vo,는 장바구니에서 참조  */ PaymentVO p_vo,
+			   			int totalprice, HttpSession session) throws Exception {
+		
+		ResponseEntity<String> entity = null;
+		
+		String mbsp_id = ((MemberVO) session.getAttribute("loginStatus")).getMbsp_id();;
+		o_vo.setMbsp_id(mbsp_id); // 아이디 값 할당(설정)
+		
+		// 시퀀스를 주문번호로 사용: 동일한 주문번호 값이 사용
+		// int com.docmall.service.OrderService.getOrderSeq()
+		Long ord_code = (long) orderService.getOrderSeq();
+		o_vo.setOrd_code(ord_code); // 주문번호 저장		
+		
+		// 1) 주문 테이블 저장 작업: ord_status, payment_status 데이터 준비할 것(우선은 누락시킴)
+		// 2) 주문 상세 테이블 저장 작업
+		
+		o_vo.setOrd_status("주문완료");
+		o_vo.setPayment_status("결제완료");
+		
+		p_vo.setPay_method("무통장입금");
+		p_vo.setOrd_code(ord_code);
+		p_vo.setMbsp_id(mbsp_id);
+		p_vo.setPay_tot_price(totalprice);
+		p_vo.setPay_nobank_price(totalprice);
+		
+		log.info("결제방법: " + paymethod);
+		log.info("주문정보: " + o_vo);
+		log.info("결제정보: " + p_vo);
+		
+		// orderService.order_insert(o_vo, p_vo); // 주문, 주문상세 정보 저장, 장바구니 삭제, 결제 정보 저장
+		
+		entity = new ResponseEntity<>("success", HttpStatus.OK);
+		
+		return entity;
 	}
 }

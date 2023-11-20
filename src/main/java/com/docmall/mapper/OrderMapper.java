@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 
 // import com.docmall.domain.OrderDetailVO;
 import com.docmall.domain.OrderVO;
+import com.docmall.domain.PaymentVO;
 
 public interface OrderMapper {
 
@@ -22,4 +23,7 @@ public interface OrderMapper {
 	
 	// 3) 장바구니 테이블 삭제(비우기)
 	void cart_del(String mbsp_id);
+	
+	// 4) 결제 테이블 저장
+	void payment_insert(PaymentVO vo);
 }

@@ -33,7 +33,7 @@ public class OrderVO {
 	private String ord_addr_basic; // 기본 주소
 	private String ord_addr_detail; // 상세 주소
 	private String ord_tel; // 전화번호
-	private int ord_price; //  총 주문 금액
+	private Integer ord_price; //  총 주문 금액
 	
 	private Date ord_regdate; // 주문 일자: 내부적으로 처리(sysdate)
 	
