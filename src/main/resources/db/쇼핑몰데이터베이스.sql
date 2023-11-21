@@ -229,7 +229,7 @@ SELECT * FROM category_tbl;
 SELECT CG_CODE, CG_PARENT_CODE, CG_NAME FROM CATEGORY_TBL WHERE CG_PARENT_CODE IS NULL;
 
 -- 1차 카테고리 TOP의 2차 카테고리 출력.
-SELECT cg_code, cg_parent_code, cg_name FROM category_tbl WHERE cg_parent_code = 1;
+SELECT cg_parent_code, cg_code, cg_name FROM category_tbl WHERE cg_parent_code = 1;
 
 -- 2차 카테고리 8의 부모(1차 카테고리 정보)
 SELECT * FROM category_tbl where cg_code = 8;
@@ -424,7 +424,7 @@ SELECT * FROM product_tbl WHERE PRO_NUM = 1;
 DROP TABLE CART_TBL;
 --4.장바구니 테이블
 CREATE TABLE CART_TBL(
-        CART_CODE        NUMBER,
+        CART_CODE        NUMBER,                  -- 장바구니 코드
         PRO_NUM         NUMBER          NOT NULL,
         MBSP_ID         VARCHAR2(15)    NOT NULL,
         CART_AMOUNT      NUMBER          NOT NULL,

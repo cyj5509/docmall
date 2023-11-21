@@ -9,10 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.docmall.domain.CartVO;
 import com.docmall.domain.MemberVO;
 import com.docmall.domain.OrderVO;
 import com.docmall.domain.PaymentVO;
@@ -74,6 +76,20 @@ public class OrderController {
 		
 		model.addAttribute("order_info", order_info);
 		model.addAttribute("order_price", order_price);
+	}
+	
+	// 상품상세에서 주문하기
+	@GetMapping("/order_ready")
+	public String order_ready(CartVO vo, HttpSession session) throws Exception {
+		
+		log.info("상세주문하기: " + vo);
+		
+		String mbsp_id = ((MemberVO) session.getAttribute("loginStatus")).getMbsp_id();
+		vo.setMbsp_id(mbsp_id);
+
+		cartService.cart_add(vo);
+		
+		return "redirect:/user/order/order_info"; // 주문정보 페이지
 	}
 	
 	// 주문 정보 페이지에서 카카오페이 결제 선택을 진행한 경우: 주문 정보, 주문 상세 정보, 결제 정보가 한꺼번에 들어옴

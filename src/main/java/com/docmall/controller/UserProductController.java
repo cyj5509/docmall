@@ -74,4 +74,22 @@ public class UserProductController {
 
 		return FileUtils.getFile(uploadPath + dateFolderName, fileName);
 	}
+	
+	// 상품 상세(상품 후기 작업 포함)
+	// Integer cg_code, String cg_name: 액션폼에서 넘어오는 값으로 cg_name은 다시 활용
+	@GetMapping("/pro_detail")
+	public void pro_detail(Criteria cri, Integer cg_code, @ModelAttribute("cg_name") String cg_name, Integer pro_num, Model model) throws Exception {
+		
+		log.info("페이징 정보: " + cri);
+		log.info("상품코드: " + pro_num);
+		
+		ProductVO productVO = userProductService.pro_detail(pro_num);
+		// 클라이언트에서 이미지 출력작업: \(역슬래시)가 서버로 보낼 때 문제가 되어 /(슬래시)를 사용하고자 함 
+		productVO.setPro_up_folder(productVO.getPro_up_folder().replace("\\", "/"));
+		
+		model.addAttribute("productVO", productVO); // 화면에 보여줘야 해서 모델 작업 필요
+
+		// DB 연동작업
+		
+	}
 }

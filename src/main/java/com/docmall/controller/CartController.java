@@ -45,6 +45,8 @@ public class CartController {
 	// @ResponseBody // 기능상 중복되긴 하지만, 명시적 전달을 위함(작성한다고 해서 문제가 되지 않는 어노테이션)
 	public ResponseEntity<String> cart_add(CartVO vo, HttpSession session) throws Exception {
 
+		log.info("장바구니: " + vo);
+		
 		ResponseEntity<String> entity = null;
 
 		// 서버 ─ 로그인한 사용자의 아이디 정보 추가 작업
