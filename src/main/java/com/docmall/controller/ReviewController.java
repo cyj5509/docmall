@@ -1,5 +1,7 @@
 package com.docmall.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -16,12 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.docmall.domain.MemberVO;
 import com.docmall.domain.ReviewVO;
+import com.docmall.dto.Criteria;
+import com.docmall.dto.PageDTO;
 import com.docmall.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
-@RestController // AJAX로만 활용(JSP 파일 미사용)
+@RestController // AJAX로만 활용(JSP 파일 미사용) -> @Controller + @ResponseBody
 @RequiredArgsConstructor
 @RequestMapping("/user/review/*") 
 @Log4j
@@ -51,12 +55,44 @@ public class ReviewController {
 	}
 	
 	// 전통적인 형태의 주소 list?pro_num=10&page=1 -> REST API 개발형태 주소 list/10/1
+	// ResponseEntity<String>는 AJAX 요청 시 SELECT 외 나머지, AJAX 요청 시 SELECT면 해당하는 리턴 타입 필요
 	@GetMapping("/list/{pro_num}/{page}") // RESTful 개발방법론의 주소
 	public ResponseEntity<Map<String, Object>> list(@PathVariable("pro_num") Integer pro_num, 
 												   @PathVariable("page") Integer page) throws Exception {
 		
-		ResponseEntity<Map<String, Object>> entity = null;
+		// 리턴 타입에 따른 구분 ─ SELECT 문
+		// ResponseEntity<Map<String, Object>>: 1) 상품 후기 목록 데이터 ─ List<ReviewVO>, 2)페이징 데이터 ─ PageDTO 실제 작업 
+		// ResponseEntity<List<ReviewVO>>: 상품 후기 목록 데이터 ─ List<ReviewVO>
+		// ResponseEntity<PageDTO>: 페이징 데이터
 		
+		// 리턴 타입에 따른 구분 ─ INSERT, DELETE, UPDATE 문
+		// ResponseEntity<String>
+		
+		ResponseEntity<Map<String, Object>> entity = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		// 1) 상품 후기 목록 데이터: Handelbars 이용
+		Criteria cri = new Criteria(); // 파라미터가 아닌 수동 작업
+		cri.setAmount(20); // 기본값이 10이라서 20개씩 조회
+		cri.setPageNum(page);
+		
+		// DB 연동
+		// List<ReviewVO> com.docmall.service.ReviewService.list(Integer pro_num, Criteria cri)
+		List<ReviewVO> list = reviewService.list(pro_num, cri);
+		
+		// 2) 페이징 데이터: 순수 자바스크립트 문법
+		
+		// DB 연동
+		// int com.docmall.service.ReviewService.listCount(Integer pro_num)
+		int listCount = reviewService.listCount(pro_num);
+		PageDTO pageMaker = new PageDTO(cri, listCount);
+		
+		// map.put(key, value)
+		map.put("list", list); // 상품 후기 목록 데이터 ─ List<ReviewVO>
+		map.put("pageMaker", pageMaker); //  페이징 데이터 ─ PageDTO
+		
+		// Jackson-Databind 라이브러리에 의하여 map -> JSON으로 변환되어 AJAX 호출한 쪽으로 리턴값이 보내진다.
+		entity = new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		
 		return entity;
 	}

@@ -12,4 +12,32 @@
 		(seq_review_tbl.NEXTVAL, #{mbsp_id}, #{pro_num}, #{rew_content}, #{rew_score})
 </insert>
 
+<!-- com.docmall.mapper.UserProductMapper -->
+<select id="list" parameterType="map" resultType="com.docmall.domain.ReviewVO">
+	<![CDATA[
+	SELECT
+		rew_num, mbsp_id, pro_num, rew_content, rew_score, rew_regdate
+	FROM 
+	    (
+	    SELECT /*+ INDEX_DESC(review_tbl pk_review_tbl) */
+    			ROWNUM rn, rew_num, mbsp_id, pro_num, rew_content, rew_score, rew_regdate
+	    FROM
+    			review_tbl
+	    WHERE
+	    		pro_num = #{pro_num} AND ROWNUM <= #{cri.pageNum} * #{cri.amount} 
+	    )
+	WHERE
+		rn > (#{cri.pageNum} -1) * #{cri.amount}
+	]]>
+</select>
+
+<select id="listCount" parameterType="Integer" resultType="int">
+	SELECT
+		COUNT(*)
+	FROM
+		review_tbl
+	WHERE
+		pro_num = #{pro_num}
+</select>
+
 </mapper>

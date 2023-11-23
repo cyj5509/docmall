@@ -14,13 +14,11 @@
 	FROM 
 	    (
 	    SELECT /*+ INDEX_DESC(PRODUCT_TBL PK_PRO_NUM) */
-    		ROWNUM RN, PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
+    			ROWNUM RN, PRO_NUM, CG_CODE, PRO_NAME, PRO_PRICE, PRO_DISCOUNT, PRO_PUBLISHER, PRO_CONTENT, PRO_UP_FOLDER, PRO_IMG, PRO_AMOUNT, PRO_BUY, PRO_DATE, PRO_UPDATEDATE
 	    FROM
-    		PRODUCT_TBL
+    			PRODUCT_TBL
 	    WHERE
-	    	cg_code = #{cg_code}
-	    	AND
-	    	ROWNUM <= #{cri.pageNum} * #{cri.amount} 
+	    		cg_code = #{cg_code} AND ROWNUM <= #{cri.pageNum} * #{cri.amount} 
 	    )
 	WHERE
 		RN > (#{cri.pageNum} -1) * #{cri.amount}]]>
