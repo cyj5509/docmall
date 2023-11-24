@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,7 +74,7 @@ public class ReviewController {
 		
 		// 1) 상품 후기 목록 데이터: Handelbars 이용
 		Criteria cri = new Criteria(); // 파라미터가 아닌 수동 작업
-		cri.setAmount(20); // 기본값이 10이라서 20개씩 조회
+		cri.setAmount(2); // 기본값이 10이라서 2개씩 조회
 		cri.setPageNum(page);
 		
 		// DB 연동
@@ -96,5 +97,19 @@ public class ReviewController {
 		
 		return entity;
 	}
-
+	
+	// 상품후기 삭제
+	// 웹 요청 방식인 GET(SELECT 문), POST(SELECT 제외) 외에 PUT/PETCH(UPDATE 문), DELETE(DELETE 문)
+	// REST API 개발방법론 CRUD(Create, Read, Update, Delete)에 의함
+	@DeleteMapping("/delete/{rew_num}") 
+	public ResponseEntity<String> delete(@PathVariable ("rew_num") Long rew_num) throws Exception {
+		
+		ResponseEntity<String> entity = null;
+		
+		// DB 연동
+		reviewService.delete(rew_num);
+		entity = new ResponseEntity<String>("success", HttpStatus.OK); // HTTP 상태 코드 200
+		
+		return entity;
+	}
 }

@@ -12,4 +12,6 @@ public interface ReviewService {
 	List<ReviewVO> list(Integer pro_num, Criteria cri); // Criteria에서 검색 관련 필드 사용 안함
 	
 	int listCount(Integer pro_num);
+	
+	void delete(Long rew_num); // INSERT, DELETE, UPDATE 문은 void
 }
