@@ -3,7 +3,6 @@ package com.docmall.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.docmall.domain.ReviewVO;
 import com.docmall.dto.Criteria;
@@ -11,6 +10,8 @@ import com.docmall.dto.Criteria;
 public interface ReviewMapper {
 
 	void review_insert(ReviewVO vo);
+	
+	void review_modify(ReviewVO vo);
 	
 	// 가져오는 데이터가 여러 개면 List, 하나면 해당 데이터 타입
 	List<ReviewVO> list(@Param("pro_num") Integer pro_num, 
