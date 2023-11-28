@@ -553,7 +553,7 @@ DELETE FROM cart_tbl WHERE mbsp_id = 'user01';
 DROP TABLE ORDER_TBL;
 --5.주문내용 테이블
 CREATE TABLE order_tbl(
-        ord_code            NUMBER                  PRIMARY KEY,
+        ord_code            NUMBER,
         mbsp_id             VARCHAR2(15)            NOT NULL,
         ord_name            VARCHAR2(30)            NOT NULL,
         ord_zipcode         CHAR(5)                 NOT NULL,
@@ -563,20 +563,18 @@ CREATE TABLE order_tbl(
         ord_price           NUMBER                  NOT NULL,  -- 총 주문 금액. 선택
         ord_regdate         DATE DEFAULT sysdate    NOT NULL,
         ord_status          VARCHAR2(20)            NOT NULL, -- 주문 상태
-        payment_status      VARCHAR2(20)            NOT NULL, -- 결제 상태
-        FOREIGN KEY(mbsp_id) REFERENCES mbsp_tbl(mbsp_id)
+        payment_status      VARCHAR2(20)            NOT NULL -- 결제 상태
+        -- FOREIGN KEY(mbsp_id) REFERENCES mbsp_tbl(mbsp_id)
 );
 
-
-insert into ORDER_TBL(ord_code, mbsp_id, ord_name, ord_addr_post, ord_addr_basic, ord_addr_detail, ord_tel, ord_price)
-values
-
+ALTER TABLE ORDER_TBL
+ADD CONSTRAINT pk_order_tbl PRIMARY KEY(ord_code);
 
 DROP TABLE ORDETAIL_TBL;
 --6.주문상세 테이블: 중복되는 부분이 있어 테이블을 분리하여 작업(데이터베이스 모델링)
 CREATE TABLE ordetail_tbl(
-        ord_code        NUMBER      NOT NULL REFERENCES order_tbl(ord_code),
-        pro_num         NUMBER      NOT NULL REFERENCES product_tbl(pro_num),
+        ord_code        NUMBER      NOT NULL, -- REFERENCES order_tbl(ord_code),
+        pro_num         NUMBER      NOT NULL, -- REFERENCES product_tbl(pro_num),
         dt_amount       NUMBER      NOT NULL,
         dt_price        NUMBER      NOT NULL,  -- 역정규화
         PRIMARY KEY (ord_code ,pro_num) 
@@ -747,10 +745,16 @@ CREATE TABLE REVIEW_TBL(
 ALTER TABLE REVIEW_TBL
 ADD CONSTRAINT PK_REVIEW_TBL PRIMARY KEY(REW_NUM);
 
+-- REW_NUM 컬럼에 PK 제약조건으로 사용한 PK_REVIEW_TBL 이름으로 인덱스가 생성된다.
 
+-- 사용자 상품 리스트 페이징 목록 쿼리 -> 상품 후기 페이징 목록 쿼리 변경
 
-create sequence seq_REVIEW_TBL;
+INSERT INTO review_tbl(rew_num, mbsp_id, pro_num, rew_content, rew_score)
+VALUES (seq_review_tbl.NEXTVAL, ?, ?, ?, ?)
 
+create sequence seq_REVIEW_TBL; -- 시퀀스 생성
+
+-- rew_num, mbsp_id, pro_num, rew_content, rew_score, rew_regdate
 -- rew_num, mbsp_id, pro_num, rew_content, rew_score, rew_regdate
 
 --상품후기 입력
@@ -876,23 +880,45 @@ FROM (
     )
 WHERE RN >=4 AND RN <=6;
 
+DROP TABLE PAYMENT;
+
 -- 결제 테이블(카카오 페이)
 CREATE TABLE PAYMENT (
-  PAY_CODE          NUMBER PRIMARY KEY,        -- 일련번호
+  PAY_CODE          NUMBER NOT NULL, -- PRIMARY KEY,        -- 일련번호
   ORD_CODE          NUMBER NOT NULL,        -- 주문번호
   MBSP_ID           VARCHAR2(50) NOT NULL,  -- 회원 ID
   PAY_METHOD        VARCHAR2(50) NOT NULL,  -- 결제방식
   PAY_DATE          DATE  NULL,             -- 결제일
   PAY_TOT_PRICE     NUMBER NOT NULL,        -- 결제금액
   PAY_NOBANK_PRICE  NUMBER NULL,        -- 무통장 입금금액
-  PAY_REST_PRICE    NUMBER NULL,               --미지급금
-  -- PAY_NOBANK_USER   VARCHAR2(50) NULL,    -- 무통장 입금자명
+  -- PAY_REST_PRICE    NUMBER NULL,               --미지급금
+  PAY_NOBANK_USER   VARCHAR2(50) NULL,    -- 무통장 입금자명
   PAY_NOBANK        VARCHAR2(50) NULL,            -- 입금은행
-  PAY_MEMO          VARCHAR2(50) NULL,             --메모
+  PAY_MEMO          VARCHAR2(100) NULL,             --메모
   PAY_BANKACCOUNT   VARCHAR2(50) NULL
 );
 
+ALTER TABLE PAYMENT
+ADD CONSTRAINT PK_PAT_CODE PRIMARY KEY (PAY_CODE);
 
 CREATE SEQUENCE SEQ_PAYMENT_CODE;
 
 pay_code, ord_code, mbsp_ip, pay_method, pay_date, pay_tot_price, pay_nobank_price, pay_nobank_user, pay_nobank, pay_memo
+ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status
+
+<![CDATA[
+	SELECT
+		ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status
+	FROM 
+	    (
+	    SELECT /*+ INDEX_DESC(order_tbl pk_order_tbl) */
+    		ROWNUM RN, ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status
+	    FROM
+    		order_tbl
+	    WHERE]]>
+		    <include refid="criteria"></include> 
+		    <![CDATA[
+	     	ROWNUM <= #{pageNum} * #{amount}
+	    )
+	WHERE
+		RN > (#{pageNum} -1) * #{amount}]]>
