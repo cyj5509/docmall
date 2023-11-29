@@ -158,7 +158,8 @@ public class OrderController {
 		Long odr_code = (Long) session.getAttribute("odr_code");
 		String mbsp_id = ((MemberVO) session.getAttribute("loginStatus")).getMbsp_id();;
 
-		ApproveResponse approveResponse = kakaoPayServiceImpl.payApprove(tid, odr_code, mbsp_id, pg_token);
+		// ApproveResponse approveResponse = kakaoPayServiceImpl.payApprove(tid, odr_code, mbsp_id, pg_token);
+		kakaoPayServiceImpl.payApprove(tid, odr_code, mbsp_id, pg_token);
 
 		session.removeAttribute("tid");
 		session.removeAttribute("odr_code");

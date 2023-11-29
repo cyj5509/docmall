@@ -359,7 +359,7 @@ desired effect
               let ord_code = $(this).data("ord_code");
               let pro_num = $(this).data("pro_num");
 
-              if(!confirm("상품코드 "+ pro_num + " 번을 삭제하시겠습니까?")) return;
+              if (!confirm("상품코드 " + pro_num + " 번을 삭제하시겠습니까?")) return;
 
               // console.log("주문번호", ord_code);
               // console.log("상품코드", pro_num);
@@ -370,7 +370,7 @@ desired effect
               actionForm.append("<input type='hidden' name='pro_num' value='" + pro_num + "'>");
 
               actionForm.attr("action", "/admin/order/order_product_delete");
-              
+
               actionForm.submit();
             })
 
@@ -391,24 +391,25 @@ desired effect
           }); // ready 이벤트
         </script>
 
-<div class="modal fade" id="order_detail_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-dialog-scrollable">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">×</span>
-      </button>
-    </div>
-    <div class="modal-body" id="order_detail_content"> <!-- $("#order_detail_content").load(url) -->
-      
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    </div>
-  </div>
-</div>
-</div>
+        <div class="modal fade" id="order_detail_modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body" id="order_detail_content"> <!-- $("#order_detail_content").load(url) -->
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
     </body>
 
