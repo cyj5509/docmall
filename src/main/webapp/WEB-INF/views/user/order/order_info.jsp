@@ -269,7 +269,7 @@
 										console.log("ord_tel", $("#mbsp_phone").val());
 										// 입력 양식이 아닌 태그들은 text() 사용
 										console.log("ord_price", $("#cart_total_price").text());
-										console.log("totalamount", $("#cart_total_price").text());
+										console.log("total_price", $("#cart_total_price").text());
 
 										let paymethod = $("input[name='paymethod']:checked").val();
 
@@ -316,6 +316,7 @@
 													// 실수값 처리에 대한 문제(할인율 포함)로 정상 출력되지 않음
 													ord_price: $("#cart_total_price").text(),
 													totalprice: $("#cart_total_price").text(),
+													
 													pay_nobank_user: $("#pay_nobank_user").val(),
 													pay_nobank: $("#pay_nobank option:selected").text(), // val()이라 하면 계좌번호, pay_nobank = $(this).text();
 													pay_memo: $("#pay_memo").val(),
