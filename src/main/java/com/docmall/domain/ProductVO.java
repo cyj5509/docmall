@@ -33,7 +33,7 @@ public class ProductVO {
 	private Integer pro_num; // 상품코드: 시퀀스 생성(사용자로부터 직접 입력받지 않음)
 	private Integer cg_code; // cg_code: 2차 카테고리 코드
 	private String pro_name;
-	private int pro_price;
+	private int pro_price;  // dt_price와 동일
 	private int pro_discount;
 
 	private String pro_publisher;
@@ -41,7 +41,7 @@ public class ProductVO {
 	private String pro_up_folder; // 클라이언트에서 직접 입력받지 않고 스프링에서 별도로 처리(매퍼 작업)
 	private String pro_img; // 클라이언트에서 직접 입력받지 않고 스프링에서 별도로 처리(매퍼 작업)
 	
-	private int pro_amount;
+	private int pro_amount; // 재고 수량
 	private String pro_buy;
 	
 	private Date pro_date;

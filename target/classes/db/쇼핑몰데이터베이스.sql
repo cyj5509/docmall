@@ -586,6 +586,30 @@ CREATE SEQUENCE SEQ_ORD_CODE;
 -- 주문 테이블: ORDER_TBL
 ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status
 
+-- 주문상세 정보: 주문상세 테이블, 상품 테이블
+-- JOIN: 1) 오라클 조인 2) ANSI-SQL 표준 조인
+-- OT.DT_PRICE는 P.PRO_PRICE와 동일
+-- 1) 오라클 조인
+SELECT OT.ORD_CODE, OT.PRO_NUM, OT.DT_AMOUNT, OT.DT_PRICE,
+P.PRO_NUM, P.CG_CODE, P.PRO_NAME, P.PRO_PRICE, P.PRO_DISCOUNT, P.PRO_PUBLISHER,
+P.PRO_CONTENT, P.PRO_UP_FOLDER, P.PRO_IMG, P.PRO_AMOUNT, P.PRO_BUY, P.PRO_DATE, P.PRO_UPDATEDATE
+FROM ORDETAIL_TBL OT, PRODUCT_TBL P
+WHERE OT.PRO_NUM = P.PRO_NUM
+AND OT.ORD_CODE = 선택주문번호;
+
+-- 2) ANSI 조인
+SELECT OT.ORD_CODE, OT.PRO_NUM, OT.DT_AMOUNT, OT.DT_PRICE
+P.PRO_NUM, P.CG_CODE, P.PRO_NAME, P.PRO_PRICE, P.PRO_DISCOUNT, P.PRO_PUBLISHER,
+P.PRO_CONTENT, P.PRO_UP_FOLDER, P.PRO_IMG, P.PRO_AMOUNT, P.PRO_BUY, P.PRO_DATE, P.PRO_UPDATEDATE
+FROM ORDETAIL_TBL OT INNER JOIN PRODUCT_TBL P
+ON OT.PRO_NUM = P.PRO_NUM
+WHERE OT.ORD_CODE = 선택주문번호;
+
+SELECT OT.ORD_CODE, OT.PRO_NUM, OT.DT_AMOUNT, P.PRO_NUM, P.PRO_NAME, P.PRO_PRICE, P.PRO_UP_FOLDER, P.PRO_IMG
+FROM ORDETAIL_TBL OT, PRODUCT_TBL P
+WHERE OT.PRO_NUM = P.PRO_NUM
+AND OT.ORD_CODE = 선택주문번호;
+
 -- 주문 상세 테이블 참조(장바구니 테이블 참조)
 -- INSERT ~ SELECT 문
 /*
@@ -922,3 +946,5 @@ ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_t
 	    )
 	WHERE
 		RN > (#{pageNum} -1) * #{amount}]]>
+    
+

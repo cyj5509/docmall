@@ -12,11 +12,13 @@ CREATE TABLE ordetail_tbl(
 );
 */
 
+// 테이블 기반으로 만들 클래스
 @Data
 public class OrderDetailVO {
 
+	// 테이블의 컬럼명
 	private Long ord_code; // 주문번호: 시퀀스로 처리
 	private Integer pro_num; // 상품코드
 	private int dt_amount; // 개별 상품 개수: 카트 쪽에서 받아옴
-	private int dt_price; // 개별 상품 가격: 카트 쪽에서 받아옴
+	private int dt_price; // 개별 상품 가격: 카트 쪽에서 받아옴(=pro_price)
 }
