@@ -14,6 +14,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <title>AdminLTE 2 | Starter</title>
       <!-- Tell the browser to be responsive to screen width -->
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+
+      <style>
+        /* Important part */
+        .modal-content {
+          overflow-y: initial !important
+        }
+
+        .modal-body {
+          height: 250px;
+          overflow-y: auto;
+        }
+      </style>
+      
       <%@ include file="/WEB-INF/views/admin/include/plugin1.jsp" %>
 
         <!-- Handlebars(자바스크립트 템플릿 엔진): 서버에서 보내온 JSON 형태의 데이터를 사용하여 작업을 편하게 할 수 있는 특징 -->
