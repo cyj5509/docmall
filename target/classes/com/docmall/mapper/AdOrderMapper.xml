@@ -6,16 +6,19 @@
   
 <mapper namespace="com.docmall.mapper.AdOrderMapper">
 
+<!-- 공통된 SQL 구문 작업: 검색 조건 -->
+<!-- 검색 기능을 사용하지 않을 경우, 값이 없어 foreach 이하 구문이 동작하지 않음 -->
 <sql id="criteria">
 	<trim prefix="(" suffix=") AND" prefixOverrides="OR">	 <!--  prefixOverrides="AND"는 오류 발생 -->
-    		<foreach collection="typeArr" item="type">
+		<!-- 단일 검색이 아닌 복합 검색을 위해 foreach 사용, item="type"는 변수의 성격 -->
+    		<foreach collection="cri.typeArr" item="type">
 			<trim prefix="OR">
 			    <choose>
 			        <when test="type == 'N'.toString()">
-			            ord_code like '%' || #{keyword} || '%' 
+			            ord_name LIKE '%' || #{cri.keyword} || '%' 
 			        </when>
 			        <when test="type == 'C'.toString()">
-			            ord_name like '%' || #{keyword} || '%' 
+			            ord_code LIKE '%' || #{cri.keyword} || '%' 
 			        </when>
 			    </choose>
 			</trim>
@@ -23,7 +26,17 @@
 	</trim>
 </sql>
 
-<select id="order_list" resultType="com.docmall.domain.OrderVO" parameterType="com.docmall.dto.Criteria">
+<!--  공통된 SQL 구문 작업: 검색 조건 -->
+<sql id="period">
+	<if test="start_date != null and !start_date.equals('')"> <!-- 시작 데이터가 값이 있거나 공백이 아닌 경우 -->
+		<!-- 이외에 조건식이 추가될 경우 + 1 뒤에 AND를 붙이는 식으로 작성 -->
+		<![CDATA[
+		 	ord_regdate >= TO_DATE(#{start_date}) AND ord_regdate < TO_DATE(#{end_date}) + 1 AND
+		]]>
+	</if>
+</sql>
+
+<select id="order_list" resultType="com.docmall.domain.OrderVO" parameterType="map">
 	<![CDATA[
 	SELECT
 		ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status
@@ -33,23 +46,26 @@
     			ROWNUM rn, ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status
 	    FROM
     			order_tbl
-	    WHERE]]>
+	    WHERE
+	    		]]>
 		    <include refid="criteria"></include> 
+		    	<include refid="period"></include>
 		    <![CDATA[
-	     	ROWNUM <= #{pageNum} * #{amount}
+		   	ROWNUM <= #{cri.pageNum} * #{cri.amount}
 	    )
 	WHERE
-		rn > (#{pageNum} -1) * #{amount}]]>
+		rn > (#{cri.pageNum} -1) * #{cri.amount}]]>
 
 </select>
 
-<select id="getTotalCount" resultType="int">
+<select id="getTotalCount" resultType="int" parameterType="map">
 	SELECT
 		COUNT(*)
 	FROM
 		order_tbl
 	WHERE 
 		<include refid="criteria"></include>
+		<include refid="period"></include>
 		ord_code > 0
 </select>
 

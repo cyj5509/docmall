@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,18 +38,19 @@ public class AdOrderController {
 	@Resource(name = "uploadPath")
 	private String uploadPath;
 
-	// 주문 리스트: 목록과 페이징
-	// 테이블의 전체 데이터를 가져옴
+	// 주문 리스트: 목록과 페이징. 테이블의 전체 데이터를 가져옴
+	// @ModelAttribute를 사용한 이유는 사용자가 썼던 날짜를 유지하기 위함
 	@GetMapping("/order_list")
-	public void order_list(Criteria cri, Model model) throws Exception { // Model model: JSP에서 어떤 정보를 보여주고자 할 때
+	public void order_list(Criteria cri, @ModelAttribute("start_date") String start_date, 
+						  @ModelAttribute("end_date") String end_date, Model model) throws Exception { // Model model: JSP에서 어떤 정보를 보여주고자 할 때
 
 		// 10 -> 2로 변경
 		cri.setAmount(2); // Criteria에서 this(1, 2);
 
-		List<OrderVO> order_list = adOrderService.order_list(cri);
+		List<OrderVO> order_list = adOrderService.order_list(cri, start_date, end_date);
 		model.addAttribute("order_list", order_list);
 
-		int totalCount = adOrderService.getTotalCount(cri);
+		int totalCount = adOrderService.getTotalCount(cri, start_date, end_date);
 		model.addAttribute("pageMaker", new PageDTO(cri, totalCount));
 	}
 

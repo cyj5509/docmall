@@ -43,7 +43,7 @@
 								<br>
 								<h3 class="box-title">Mypage</h3>
 								<br>
-								<form role="form" id="modifyForm" method="post" action="/member/modify">
+								<form role="form" id="modifyForm" method="post" action="/member/mypage">
 									<div class="box-body">
 										<div class="form-group row">
 											<label for="mbsp_id" class="col-2">아이디</label>

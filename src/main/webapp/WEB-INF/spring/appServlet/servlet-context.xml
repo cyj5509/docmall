@@ -55,6 +55,48 @@
 		<beans:constructor-arg value="C:\\Dev\\upload\\ckeditor\\"></beans:constructor-arg>
 	</beans:bean>
 	
+	<!-- 인터셉터 설정 1 ─ 연습용 -->
+	<beans:bean id="testInterceptor" class="com.docmall.interceptor.TestInterceptor" />
+	
+	<interceptors>
+		<interceptor>
+			<mapping path="/test/testA"/>
+			<mapping path="/test/testB"/>
+			<beans:ref bean="testInterceptor"/>			
+		</interceptor>
+	</interceptors>
+	
+	<!-- 인터셉터 설정 2 ─ 사용자 -->
+	<beans:bean id="userInterceptor" class="com.docmall.interceptor.UserInterceptor" />
+	
+	<interceptors>
+		<interceptor>
+			<!-- <mapping path="/member/*"/>는 포함될 매핑 주소 -->
+			<!-- <exclude-mapping path=""/>는 제외될 매핑 주소 -->
+			<!-- 추가 작업 필요 -->
+			<mapping path="/member/confirmPw"/> 
+			<mapping path="/member/modify"/> 
+			<mapping path="/member/mypage"/> 
+			<mapping path="/member/delConfirmPw"/>
+			<mapping path="/user/cart/*"/>
+			<mapping path="/user/order/*"/>
+			<beans:ref bean="userInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
+	<!-- 인터셉터 설정 3 ─ 관리자 -->
+	<beans:bean id="adminInterceptor" class="com.docmall.interceptor.AdminInterceptor" />
+	
+	<interceptors>
+		<interceptor>
+			<!-- 추가 작업 필요 -->
+			<mapping path="/admin/**"/> <!-- @RequestMapping("/admin/order/*") -->
+			<exclude-mapping path="/admin/intro"/>
+			<exclude-mapping path="/admin/admin_ok"/>
+			<beans:ref bean="adminInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
 	<context:component-scan base-package="com.docmall.controller" />
 	
 </beans:beans>

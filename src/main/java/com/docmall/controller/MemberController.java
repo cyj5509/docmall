@@ -115,7 +115,13 @@ public class MemberController {
 				// 23.10.30. 추가분: 로그인 시간 업데이트 작업: 휴면 계정 등 관리
 				memberService.loginTimeUpdate(dto.getMbsp_id());
 
-				url = "/"; // 메인 페이지 주소
+				// 인증이 없는 상태에서 인증이 필요한 URI 요청 주소를 가지고 있을 때
+				if(session.getAttribute("targetUrl") != null) {
+					// UserInterceptor -> getTargetUrl의 request.getSession().setAttribute("targetUrl", targetUrl);
+					url = (String) session.getAttribute("targetUrl"); 
+				} else {
+					url = "/"; // 메인 페이지 주소
+				}
 			} else {
 				url = "/member/login"; // 로그인 폼 주소
 				msg = "비밀번호가 일치하지 않습니다.";
@@ -183,8 +189,15 @@ public class MemberController {
 
 	// 회원수정 폼: 인증 사용자의 회원가입 정보를 뷰(View)에 출력
 	@GetMapping("/modify")
-	public void modify(HttpSession session, Model model) {
+	public void modify(HttpSession session, Model model) throws Exception {
 
+		// 인터셉터를 사용하지 않을 경우 아래와 같은 코드를 중복 작성해야 함
+		/*
+		if(session.getAttribute("loginStatus") == null) {
+			// 로그인 페이지로 이동
+		}
+		*/
+		
 		String mbsp_id = ((MemberVO) session.getAttribute("loginStatus")).getMbsp_id();
 		MemberVO db_vo = memberService.login(mbsp_id);
 
