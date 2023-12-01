@@ -13,9 +13,10 @@
 	<annotation-driven />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
-	<!-- <resources mapping="매핑 주소" location="실제 경로" /> -->
 	<resources mapping="/resources/**" location="/resources/" />
 	
+	<!-- <resources mapping="매핑 주소" location="실제 경로" /> -->
+	<!-- 스프링 부트에서는 static 폴더에서 관리 -->
 	<resources mapping="/bower_components/**" location="/resources/bower_components/" />
 	<resources mapping="/dist/**" location="/resources/dist/" />
 	<resources mapping="/plugins/**" location="/resources/plugins/" />
@@ -26,6 +27,7 @@
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
+			<!-- 컨트롤러 메서드에서 리턴해주는 폴더명을 포함한 JSP 파일을 참조 -->
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
@@ -44,7 +46,7 @@
 	</beans:bean>
 	
 	<!-- 메인 및 썸네일 이미지 업로드 폴더 경로 설정 작업 -->
-	<!-- 다음과 같이 동작. String uploadPath = new String("C:\\Dev\\upload\\product") -->
+	<!-- 다음과 같이 동작 -> String uploadPath = new String("C:\\Dev\\upload\\product") -->
 	<!-- 스프링부트에서는 pom.xml 말고는 설정과 관련된 xml 파일 없음 -->
 	<beans:bean id="uploadPath" class="java.lang.String">
 		<beans:constructor-arg value="C:\\Dev\\upload\\product\\"></beans:constructor-arg>

@@ -6,7 +6,7 @@
 	<groupId>com.docmall</groupId>
 	<artifactId>controller</artifactId>
 	<name>docmall</name>
-	<packaging>war</packaging>
+	<packaging>war</packaging> <!-- Tomcat과 같은 WAS(Web Application Server) 필요 -->
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
 		<java-version>1.8</java-version>
@@ -98,15 +98,14 @@
 		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> 
 			<version>2.5</version> <scope>provided</scope> </dependency> -->
 
-		<!-- 서블릿 버전과 web.xml 버전을 동일하게 한다. -->
-		<!-- 버전 변경 및 web.xml도 수정해야 한다. -->
+		<!-- 서블릿과 web.xml의 version을 일치시켜야 한다. -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
-
+		
 		<!-- 확장자가 JSP인 파일을 사용하기 위한 라이브러리 -->
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
@@ -115,6 +114,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- 추가 라이브러리 설정 -->
 		<!-- JSP 문법인 <%~%> 대신 사용하기 위한 JSTL 라이브러리 -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -131,8 +131,8 @@
 			<!-- <scope>test</scope> -->
 		</dependency>
 
-		<!-- 2023.10.12. 추가 라이브러리 설정 -->
-
+		<!-- 이하 추가 라이브러리 설정 -->
+		
 		<!-- 파일업로드 라이브러리. servlet-context.xml 에서 bean 등록 작업 -->
 		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
 		<dependency>
@@ -149,7 +149,6 @@
 			<version>0.4.8</version>
 		</dependency>
 
-
 		<!-- 1) 데이터베이스(오라클) 연동 라이브러리 -->
 		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
 		<dependency>
@@ -158,7 +157,7 @@
 			<version>21.9.0.0</version>
 		</dependency>
 
-		<!-- 2)커넥션 풀(Connection Pool; CP)기능을 제공. HikariCP -->
+		<!-- 2)커넥션 풀(Connection Pool; CP) 기능을 제공 -->
 		<!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
 		<dependency>
 			<groupId>com.zaxxer</groupId>
@@ -166,9 +165,9 @@
 			<version>2.7.4</version>
 		</dependency>
 
+		<!-- 3) Mybatis 라이브러리 -->
 		<!-- 스프링에서 DB를 사용하는 방법은 크게 Mybatis와 JPA로 구분한다. -->
 		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
-		<!-- 3) Mybatis 라이브러리 -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
@@ -183,16 +182,16 @@
 			<version>2.0.6</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
 		<!-- 5) 스프링 JDBC 라이브러리. -->
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
 		<!-- 6) 트랜잭션 기능 제공 라이브러리. -->
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
@@ -208,11 +207,10 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- SQL 구문 로그를 출력할 때 사용하는 라이브러리. log4j.xml은 자동 생성 -->
-		<!-- log4jdbc.log4j2.properties, logback.xml 2개파일을 src/main/resources 폴더에 
-			복사 -->
-		<!-- root-context.xml에서 연결 설정을 해야 사용할 수가 있다. -->
-		<!-- 개발 시 SQL 구문 로그를 확인하는 목적인데, 나중에 작동 안 되게 함 -->
+		<!-- SQL 구문 로그를 출력할 때 사용하는 라이브러리 -->
+		<!-- 1. log4j.xml은 자동 생성되나, log4jdbc.log4j2.properties, logback.xml 파일을 src/main/resources 폴더에 복사 -->
+		<!-- 2. root-context.xml에서 연결 설정을 해야 사용할 수가 있다. -->
+		<!-- 개발 시 SQL 구문 로그를 확인하는 목적(인데, 나중에 작동 안 되게 함) -->
 		<dependency>
 			<groupId>org.bgee.log4jdbc-log4j2</groupId>
 			<artifactId>log4jdbc-log4j2-jdbc4</artifactId>

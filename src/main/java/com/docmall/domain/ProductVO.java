@@ -47,5 +47,5 @@ public class ProductVO {
 	private Date pro_date;
 	private Date pro_updatedate; //직접 입력 받지 않음
 	
-	// private MultipartFile uploadFile; 여기서 작성하거나 컨트롤러에서 매개변수로 활용
+	// private MultipartFile uploadFile; 여기서 작성하거나 관련 컨트롤러에서 매개변수로 활용
 }

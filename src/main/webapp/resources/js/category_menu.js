@@ -46,9 +46,18 @@ $(document).ready(function () {
 
     let cg_code = $(this).data("cg_code");
     let cg_name = $(this).data("cg_name");
-    // 한글이나 특수문자를 서버에 보낼 때 오류가 나는 경우 인코딩 과정에 의해 처리할 수 있다.: https://travelpark.tistory.com/30 
+    // 한글이나 특수문자를 서버에 보낼 때 오류가 나는 경우 인코딩 과정에 의해 처리할 수 있다.
+    // [참고] https://travelpark.tistory.com/30 
+
+    // 1) 현재 파일의 확장자가 jsp일 경우, 아래처럼 사용하는 경우, ${cg_code} 변수로 인식하는 것이 아니라 JSP의 EL 문법으로 서버에서 동작된다(주의).
+    // location.href = `/user/product/pro_list?cg_code=${cg_code}&cg_name=${cg_name}`; // 문제 발생
+
+    // 권장
+    // location.href = '/user/product/pro_list?cg_code=' + cg_code + '&cg_name=' + cg_name;
+
+    // 2) 현재 파일의 확장자가 js일 경우
     // location.href = `/user/product/pro_list/${변수}`: 주소의 일부분이 파라미터 값으로 사용
-    location.href = `/user/product/pro_list?cg_code=${cg_code}&cg_name=${cg_name}`;
+    location.href = `/user/product/pro_list?cg_code=${cg_code}&cg_name=${cg_name}`; // 템플릿 리터럴로 활용되는 백틱과 ${}
 
   });
 

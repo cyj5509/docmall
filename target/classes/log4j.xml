@@ -59,14 +59,14 @@
 		<appender-ref ref="console" />
 	</logger>
 
-	<!-- 열려있는 모든 번호와 연결 수립, 해제 이벤트를 기록. 즉, 연결 문제를 찾아내는데 매우 유용.(Connection Pool설정) -->
-	<logger name="jdbc.connection" additivity="false">
-		<level value="warn" />
+	<logger name="jdbc.resultsettable" additivity="false">
+		<level value="info" />
 		<appender-ref ref="console" />
 	</logger>
 
-	<logger name="jdbc.resultsettable" additivity="false">
-		<level value="info" />
+	<!-- 열려있는 모든 번호와 연결 수립, 해제 이벤트를 기록. 즉, 연결 문제를 찾아내는데 매우 유용.(Connection Pool설정) -->
+	<logger name="jdbc.connection" additivity="false">
+		<level value="warn" />
 		<appender-ref ref="console" />
 	</logger>
 

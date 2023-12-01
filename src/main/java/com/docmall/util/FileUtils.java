@@ -48,16 +48,18 @@ public class FileUtils {
 		// 예) "C:/Dev/devtools/upload/" -> "C:/Dev/devtools/upload/2023/11/02"
 		File file = new File(uploadFolder, dateFolder); 
 
-		// 폴더 경로가 없으면 폴더명을 생성함
+		// 예) "C:/Dev/upload" "2023/11/20" 폴더 경로가 없으면 폴더명을 생성하라
 		if (file.exists() == false) {
-			file.mkdirs();
+			file.mkdirs(); // 주의
+			// file.mkdir();
 		}
 
+		// 클라이언트에서 전송한 원본 파일명 abc.png
 		String clientFileName = uploadFile.getOriginalFilename();
 
-		// 파일명 중복 방지를 위해 고유한 이름에 사용하는 UUID 사용
+		// 파일명 중복 방지를 위해 고유한 이름에 사용하는 UUID 클래스 사용
 		UUID uuid = UUID.randomUUID();
-		realUploadFileName = uuid.toString() + "_" + clientFileName;
+		realUploadFileName = uuid.toString() + "_" + clientFileName; // _abc.png 
 
 		try {
 			// file ─ "C:/Dev/devtools/upload/2023/11/02" + realUploadFileName: 실제 업로드할 파일명

@@ -82,6 +82,7 @@ desired effect
                             <div class="col-sm-3">
                               <select class="form-control" id="firstCategory">
                                 <option>1차 카테고리 선택</option>
+                                <!-- 1차 카테고리 표시. GlobalControllerAdvice -->
                                 <c:forEach items="${firstCategoryList}" var="categoryVO">
                                   <option value="${categoryVO.cg_code}">
                                     ${categoryVO.cg_name}
@@ -280,14 +281,14 @@ desired effect
 
         <script>
           $(document).ready(function () {
-            // ckeditor 환경설정. 자바스크립트 Ojbect문법
+            // CKEditor 환경설정. 자바스크립트 Ojbect문법
             var ckeditor_config = {
               resize_enabled: false,
               enterMode: CKEDITOR.ENTER_BR,
               shiftEnterMode: CKEDITOR.ENTER_P,
               toolbarCanCollapse: true,
               removePlugins: "elementspath",
-              // 업로드 탭 기능 추가 속성. CKEditor에서 파일업로드해서 서버로 전송을 클릭하면, 이 주소가 동작된다.
+              // 업로드 탭 기능 추가 속성. CKEditor 업로드 탭에서 서버로 전송을 클릭하면, 이 주소가 동작된다.
               filebrowserUploadUrl: "/admin/product/imageUpload",
             };
 

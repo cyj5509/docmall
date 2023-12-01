@@ -14,6 +14,8 @@ CREATE TABLE category_tbl(
 // @Data
 public class CategoryVO {
 
+	// 테이블의 컬럼명과 필드명을 동일하게 함
+	// 동일하지 않은 경우, 1) 컬럼명 AS 별칭 또는 2) MyBatis resultMap 사용
 	private Integer cg_code; // 1차든 2차든 모든 카테고리 코드
 	private Integer cg_parent_code; // 1차 카테고리 코드
 	private String cg_name; // 카테고리명

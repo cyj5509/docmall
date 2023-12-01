@@ -74,20 +74,19 @@ public class AdProductController {
 	// 상품정보 저장 작업
 	// 파일 업로드 기능
 	// 1) 스프링에서 내장된 기본 라이브러리 -> servlet-context.xml에서 MultipartFile에 대한 bean 등록 작업
-	// 2) 외부 라이브러리를 이용(pom.xml의 commons-fileupload) -> servlet-context.xml에서
-	// MultipartFile에 대한 bean 등록 작업
+	// 2) 외부 라이브러리를 이용(pom.xml의 commons-fileupload) -> servlet-context.xml에서 MultipartFile에 대한 bean 등록 작업
 	// 매개변수로 쓰인 MultipartFile uploadFile은 ProductVO에 직접 집어 넣어서 사용해도 됨
-	// <input type = "file" class="form-control" name="uploadFile" id="uploadFile"
-	// placeholder="작성자 입력..."/>
+	// <input type = "file" class="form-control" name="uploadFile" id="uploadFile" placeholder="작성자 입력..."/>
 	@PostMapping("/pro_insert")
 	// public String pro_insert(ProductVO vo, List<MultipartFile> uploadFile) { //
-	// 파일이 여러 개일 때
+	// 파일이 여러 개일 때. MultipartFile uploadFile은 ProductVO에 필드로 선언하는 형태로 작업해도 됨
 	public String pro_insert(ProductVO vo, MultipartFile uploadFile, RedirectAttributes rttr) { // 파일이 하나일 때
 
 		log.info("상품정보: " + vo);
 
 		// 1) 파일 업로드 작업(선수 작업: FileUtils 클래스 작업)
 		String dateFolder = FileUtils.getDateFolder();
+		// savedFileName: 실제 업로드(저장)한 파일명
 		String savedFileName = FileUtils.uploadFile(uploadPath, dateFolder, uploadFile);
 
 		vo.setPro_img(savedFileName);
@@ -151,7 +150,7 @@ public class AdProductController {
 			 ※ 설정할 때는 '\' 하나만 사용, 코드상으로는 '\\' 두 개 사용 
 			 */
 
-			// CKEditor에서 업로드된 파일 경로를 보내줄 때 매핑 주소와 파일명이 포함
+			// CKEditor에서 업로드된 파일 경로를 보내줄 때(매핑 주소와 파일명이 포함)
 			String fileUrl = "/ckupload/" + fileName;
 			// {"filename":"abc.gif", "uploaded":1, "url":"/upload/abc.gif"}
 			printWriter.println("{\"filename\":\"" + fileName + "\", \"uploaded\":1,\"url\":\"" + fileUrl + "\"}");
@@ -172,8 +171,10 @@ public class AdProductController {
 		}
 	}
 
-	// 상품 리스트: 목록과 페이징
-	// 테이블의 전체 데이터를 가져옴
+	// 상품 리스트: 목록과 페이징 
+	// 메서드의 파라미터를 스프링에서 객체를 자동으로 생성해준다.
+	// 테이블의 전체 데이터를 가져옴.
+	// Model 파라미터는 AJAX 호출 시 사용하지 않음(단순 JSP에서 데이터 값을 이용할 때)  
 	@GetMapping("/pro_list")
 	public void pro_list(Criteria cri, Model model) throws Exception {
 
@@ -183,6 +184,7 @@ public class AdProductController {
 		List<ProductVO> pro_list = adProductService.pro_list(cri);
 
 		// 날짜 폴더의 '\'를 '/'로 바꾸는 작업(이유: '\'로 되어 있는 정보가 스프링으로 보내는 요청 데이터에 사용되면 에러 발생)
+		// 스프링에서 처리하지 않으면 자바스크립트에서 처리할 수도 있다.
 		pro_list.forEach(vo -> {
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
 		});
@@ -249,7 +251,7 @@ public class AdProductController {
 	}
 
 	// 상품수정 폼 페이지
-	@GetMapping("/pro_edit")
+	@GetMapping({"/pro_edit", "/pro_get"})
 	public void pro_edit(@ModelAttribute("cri") Criteria cri, Integer pro_num, Model model) throws Exception {
 
 		// 선택한 상품정보
@@ -259,19 +261,20 @@ public class AdProductController {
 		// 요청 타겟에서 유효하지 않은 문자가 발견되었습니다. 유효한 문자들은 RFC 7230과 RFC 3986에 정의되어 있습니다.
 		productVO.setPro_up_folder(productVO.getPro_up_folder().replace("\\", "/")); // Escape Sequence 특수문자
 
-		model.addAttribute("productVO", productVO);
+		model.addAttribute("productVO", productVO); // 2차 카테고리 코드
 
 		// 1차 전체 카테고리는 GlobalControllerAdvice 클래스 Model 참조
 
 		// 상품 카테고리에서 2차 카테고리를 이용한 1차 카테고리 정보를 참조
-		// productVO.getCg_code(): 상품 테이블에 있는 2차 카테고리 코드
+		// productVO.getCg_code(): 상품 테이블에 있는 2차 카테고리 코드의 부모인 1차 카테고리 정보를 가져오는 작업
 		// first_category 자체가 CategoryVO의 성격을 가짐
 		CategoryVO firstCategory = adCategoryService.get(productVO.getCg_code()); // 변수 설정 이유		
 		model.addAttribute("first_category", firstCategory); // first_category: 하나
 
 		// 1차 카테고리를 부모로 둔 2차 카테고리 정보 예) TOP(1)
 		// 현재 상품의 1차 카테고리 코드: firstCategory.getCg_parent_code()
-		model.addAttribute("second_categoryList", adCategoryService.getSecondCategoryList(firstCategory.getCg_parent_code())); // second_categoryList: 여러 개
+		List<CategoryVO> second_categoryList = adCategoryService.getSecondCategoryList(firstCategory.getCg_parent_code());
+		model.addAttribute("second_categoryList", second_categoryList); // second_categoryList: 여러 개
 	}
 	
 	// 상품 수정
